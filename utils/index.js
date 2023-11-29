@@ -21,7 +21,7 @@ function makeDir (dirpath) {
  */
 async function cleanup (dir) {
   try {
-    await fs.rm(dir, { recursive: true })
+    fs.rmSync(dir, { recursive: true })
     console.log(`🧹 ${dir} removed successfully.`)
   } catch (err) {
     // File deletion failed

@@ -1,17 +1,17 @@
 {
-  "name": "wp-pkg",
+  "name": "wpwm",
   "version": "1.0.0",
   "description": "A Node.js script for easy installation of WordPress, themes, and plugins.",
+  "author": "Erik Golinelli <https://github.com/erikyo>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikyo/wpwm.git"
+  },
   "bin": {
-    "wp-pkg": "index.js"
+    "wpwm": "index.js"
   },
   "main": "index.js",
-  "scripts": {
-    "start": "npx .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": ["wordpress", "manager", "package", "wp", "themes", "plugins" ],
-  "author": "Erik Golinelli",
   "license": "ISC",
   "dependencies": {
     "extract-zip": "^2.0.1"

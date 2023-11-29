@@ -36,7 +36,7 @@ class WordPressInstaller {
   async execDownload (filename, downloadUrl, destinationPath = null) {
     const zipFilePath = path.join(this.tempDir, filename)
     const zipFileName = downloadUrl.split('/').pop()
-    console.log(`Downloading filename ${zipFileName} from ${downloadUrl}.zip to ${zipFilePath}`)
+    console.log(`⬇️ Downloading filename ${zipFileName} from ${downloadUrl}.zip to ${zipFilePath}`)
     // Download the zip file
     await downloadFile(downloadUrl + '.zip', zipFilePath + '.zip')
     // Extract the zip file

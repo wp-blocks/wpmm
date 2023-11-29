@@ -1,7 +1,7 @@
 {
   "name": "modul-r-blog",
   "wordpress": {
-    "version": "5.8.1",
+    "version": "6.4.1",
     "language": "en_US",
     "config": {
       "DB_NAME": "your_database_name",
@@ -19,31 +19,6 @@
       "DISALLOW_FILE_EDIT": true
     }
   },
-  "themes": [
-    {
-      "name": "modul-r",
-      "version": "1.4.4"
-    }
-  ],
-  "plugins": [
-    {
-      "name": "contact-form-7",
-      "version": "5.8.3"
-    },
-    {
-      "name": "cf7-antispam"
-    },
-    {
-      "name": "wordpress-seo"
-    },
-    {
-      "name": "erikyo/OH-MY-SVG"
-    },
-    {
-      "name": "wp-super-cache"
-    },
-    {
-      "name": "woocommerce"
-    }
-  ]
+  "themes": [],
+  "plugins": []
 }

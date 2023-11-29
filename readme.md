@@ -1,4 +1,4 @@
-# WordPress Installer
+# WordPress Workflow Master
 
 WordPress Installer is a Node.js script designed to streamline the installation process of WordPress, themes, and plugins. It simplifies the configuration through a wp-package.json file, allowing you to specify the WordPress version, language, themes, and plugins for installation.
 
