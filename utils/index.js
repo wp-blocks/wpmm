@@ -17,17 +17,16 @@ function makeDir (dirpath) {
  * Asynchronously cleans up a temporary directory.
  *
  * @param {string} dir - The path to the temporary directory.
- * @return {Promise<void>} A promise that resolves when the cleanup is complete.
+ * @return {void} A promise that resolves when the cleanup is complete.
  */
 async function cleanup (dir) {
-  return fs.rm(dir, { recursive: true }, (err) => {
-    if (err) {
-      // File deletion failed
-      console.error(err.message)
-      return
-    }
-    console.log(`📁 ${dir} removed successfully.`)
-  })
+  try {
+    await fs.rm(dir, { recursive: true })
+    console.log(`🧹 ${dir} removed successfully.`)
+  } catch (err) {
+    // File deletion failed
+    console.error(err.message)
+  }
 }
 
 function renameFolder (oldPath, newPath) {
@@ -135,7 +134,7 @@ async function extractZip (zipFilePath, targetDirectory) {
     console.log(`📂 Extracted to ${commonRootPath}`)
     return commonRootPath
   } catch (err) {
-    console.log(`📛 Error extracting ${zipFilePath} zip: ${err}`)
+    console.error(`📛 Error extracting ${zipFilePath} zip: ${err}`)
     return err
   }
 }
@@ -143,7 +142,7 @@ async function extractZip (zipFilePath, targetDirectory) {
 async function installNpmPackages (packageDirectory) {
   const packageJsonPath = path.join(packageDirectory, 'package.json')
   if (!fs.existsSync(packageJsonPath)) {
-    console.error(`Local directory (${packageDirectory}) does not contain a package.json file.`)
+    // console.warn(`Local directory (${packageDirectory}) does not contain a package.json file.`)
     return
   }
   const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
@@ -161,11 +160,17 @@ async function installNpmPackages (packageDirectory) {
       if (error) {
         reject(error)
       } else {
-        console.log(`${packageName} dependencies installed and built.`)
+        console.log(`📦 ${packageName} dependencies installed and built.`)
         resolve()
       }
     })
   })
+}
+
+// Define a function to find the value of a specific option
+function getOptionValue (args, optionName) {
+  const optionIndex = args.indexOf(optionName)
+  return optionIndex !== -1 && optionIndex + 1 < args.length ? args[optionIndex + 1] : null
 }
 
 exports.makeDir = makeDir
@@ -176,3 +181,5 @@ exports.getWordPressDownloadUrl = getWordPressDownloadUrl
 exports.getDownloadUrl = getDownloadUrl
 exports.extractZip = extractZip
 exports.installNpmPackages = installNpmPackages
+// argv
+exports.getOptionValue = getOptionValue

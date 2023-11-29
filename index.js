@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const { makeDir, downloadFile, cleanup, renameFolder, extractZip, getWordPressDownloadUrl, getDownloadUrl, installNpmPackages } = require('./utils/index.js')
+const { getOptionValue, makeDir, downloadFile, cleanup, renameFolder, extractZip, getWordPressDownloadUrl, getDownloadUrl, installNpmPackages } = require('./utils/index.js')
 
 class WordPressInstaller {
   /**
@@ -148,6 +148,11 @@ class WordPressInstaller {
   async installPackages () {
     const { wordpress, themes, plugins } = this.config
 
+    if (!this.config.name) {
+      console.error('A name for the WordPress installation is required.')
+      process.exit(1)
+    }
+
     makeDir(this.tempDir)
 
     if (wordpress) {
@@ -185,17 +190,43 @@ class WordPressInstaller {
    * @return {Promise} - A promise that resolves when the function completes.
    */
   async run () {
+    // Start the timer
+    const startTime = Date.now()
+
     // build wp
     await this.installPackages()
+
     // cleanup temp folder
-    await cleanup(this.tempDir)
+    cleanup(this.tempDir)
+
+    // End the timer
+    const endTime = Date.now()
+
+    // Calculate the time passed
+    const timePassed = endTime - startTime
+    console.log(`🕒 Time passed: ${timePassed} milliseconds`)
   }
 }
 
-// read wp-package.json
-const config = JSON.parse(fs.readFileSync('wp-package.json', 'utf8'))
+// Get the script arguments from process.argv
+const args = process.argv.slice(2)
 
-// install WordPress
+// Read wp-package.json from the root folder
+const defaultConfigFile = path.join(process.cwd(), 'wp-package.json')
+const defaultConfig = fs.existsSync(defaultConfigFile) ? JSON.parse(fs.readFileSync(defaultConfigFile, 'utf8')) : {}
+
+// Extract the value of the --template option or use the default
+const templatePath = getOptionValue(args, '--template') || 'wp-package.json'
+
+if (!fs.existsSync(templatePath)) {
+  console.error(`🔴 The template file ${templatePath} does not exist.`)
+  process.exit(1)
+}
+
+// Read wp-package.json
+const config = { ...defaultConfig, ...JSON.parse(fs.readFileSync(templatePath, 'utf8')) }
+
+// Install WordPress
 const installer = new WordPressInstaller(config)
 installer.run().then(() => {
   console.log('🚀 WordPress installed successfully.')
