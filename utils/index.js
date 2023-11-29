@@ -10,10 +10,20 @@ function getWordPressDownloadUrl(version, language) {
   }
 }
 
-function getDownloadUrl(packageName, type) {
+function getDownloadUrl(packageName, packageVersion, type) {
+  if (packageVersion) {
+    packageName = `${packageName}.${packageVersion}`;
+  }
+  // the absolute path to the package
   if (packageName.startsWith('http://') || packageName.startsWith('https://')) {
     return packageName;
   }
+  // github author/repo
+  if ( packageName.split('/').length === 2 ) {
+    const [user, repo] = packageName.split('/');
+      return `https://github.com/${user}/${repo}/archive/refs/${packageVersion ? 'tags/' + packageVersion : 'heads/master'}`;
+  }
+  // otherwise we assume it's a repo on wordpress.org
   return `https://downloads.wordpress.org/${type}/${packageName}`;
 }
 

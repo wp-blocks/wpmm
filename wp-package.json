@@ -19,24 +19,25 @@
       "DISALLOW_FILE_EDIT": true
     }
   },
-  "theme": {
-    "name": "modul-r",
-    "version": "1.4.4"
-  },
+  "themes": [
+    {
+      "name": "modul-r",
+      "version": "1.4.4"
+    }
+  ],
   "plugins": [
     {
       "name": "contact-form-7",
       "version": "5.8.3"
     },
     {
-      "name": "cf7-antispam",
-      "version": "latest"
+      "name": "cf7-antispam"
     },
     {
       "name": "wordpress-seo"
     },
     {
-      "name": "https://github.com/erikyo/OH-MY-SVG"
+      "name": "erikyo/OH-MY-SVG"
     }
   ]
 }
