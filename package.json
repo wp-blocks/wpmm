@@ -1,14 +1,14 @@
 {
-  "name": "wpwm",
-  "version": "1.0.0",
+  "name": "wpmm",
+  "version": "0.0.2",
   "description": "A Node.js script for easy installation of WordPress, themes, and plugins.",
   "author": "Erik Golinelli <https://github.com/erikyo>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/erikyo/wpwm.git"
+    "url": "https://github.com/erikyo/wpmm.git"
   },
   "bin": {
-    "wpwm": "index.js"
+    "wpmm": "index.js"
   },
   "main": "index.js",
   "keywords": ["wordpress", "manager", "package", "wp", "themes", "plugins" ],

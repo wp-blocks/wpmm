@@ -15,11 +15,14 @@ class WordPressInstaller {
     // The config object
     this.config = config
 
+    // The root folder
+    this.rootFolder = process.cwd()
+
     // The temporary directory
-    this.tempDir = path.join(__dirname, 'temp')
+    this.tempDir = path.join(this.rootFolder, 'temp')
 
     // The base folder
-    this.baseFolder = path.join(__dirname, config.name ?? 'wordpress')
+    this.baseFolder = path.join(this.rootFolder, config.name ?? 'wordpress')
 
     // The plugins folder
     this.pluginsFolder = path.join(this.baseFolder, 'wp-content', 'plugins')
@@ -64,7 +67,7 @@ class WordPressInstaller {
     const downloadUrl = getWordPressDownloadUrl(version, language)
 
     try {
-      const destinationPath = path.join(__dirname, this.config.name)
+      const destinationPath = path.join(this.rootFolder, this.config.name)
 
       if (fs.existsSync(destinationPath)) {
         console.log('WordPress folder already exists. Skipping download.')
