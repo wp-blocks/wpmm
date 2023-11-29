@@ -4,9 +4,8 @@ WordPress Installer is a Node.js script designed to streamline the installation 
 
 ## Usage
 
-1. Clone the repository or install the npm package.
-2. Create a `wp-package.json` file with your desired configuration.
-3. Run the script using `npm start`.
+1. Create a `wp-package.json` file with your desired configuration.
+2. Run the script using `npx wpmm`.
 
 ## Configuration
 
