@@ -11,10 +11,19 @@ class WordPressInstaller {
    * Constructor function that initializes the config, tempDir, baseFolder, pluginsFolder, and themeFolder properties.
    */
   constructor (config) {
+    // The config object
     this.config = config
+
+    // The temporary directory
     this.tempDir = path.join(__dirname, 'temp')
+
+    // The base folder
     this.baseFolder = path.join(__dirname, config.name ?? 'wordpress')
+
+    // The plugins folder
     this.pluginsFolder = path.join(this.baseFolder, 'wp-content', 'plugins')
+
+    // The theme folder
     this.themeFolder = path.join(this.baseFolder, 'wp-content', 'themes')
   }
 
@@ -111,8 +120,11 @@ class WordPressInstaller {
   async execDownload (filename, downloadUrl, destinationPath = null) {
     const zipFilePath = path.join(this.tempDir, filename)
     console.log('Downloading ' + downloadUrl + '.zip')
+    // Download the zip file
     await this.downloadFile(downloadUrl + '.zip', zipFilePath)
+    // Extract the zip file
     await this.extractZip(zipFilePath, destinationPath ?? this.tempDir)
+    // install npm packages
     if (destinationPath) return installNpmPackages(path.join(destinationPath, filename))
   }
 
@@ -147,6 +159,37 @@ class WordPressInstaller {
   }
 
   /**
+   * Copies the wp-config-sample.php file to wp-config.php and sets up WordPress settings.
+   */
+  async setupWordPressConfig () {
+    const sampleConfigPath = path.join(this.baseFolder, 'wp-config-sample.php')
+    const configPath = path.join(this.baseFolder, 'wp-config.php')
+
+    try {
+      // Copy wp-config-sample.php to wp-config.php
+      fs.copyFileSync(sampleConfigPath, configPath)
+
+      // Read the content of wp-config.php
+      let configContent = fs.readFileSync(configPath, 'utf8')
+
+      // Update database name, username, password, and other settings based on user-defined config
+      configContent = configContent.replace(/'database_name_here'/, `'${this.config.wordpress.config.DB_NAME}'`)
+      configContent = configContent.replace(/'username_here'/, `'${this.config.wordpress.config.DB_USER}'`)
+      configContent = configContent.replace(/'password_here'/, `'${this.config.wordpress.config.DB_PASSWORD}'`)
+      configContent = configContent.replace(/'localhost'/, `'${this.config.wordpress.config.DB_HOST}'`)
+      configContent = configContent.replace(/'utf8'/, `'${this.config.wordpress.config.DB_CHARSET}'`)
+      // Add more replacements as needed
+
+      // Write the updated content back to wp-config.php
+      fs.writeFileSync(configPath, configContent, 'utf8')
+
+      console.log('🆗 WordPress configuration set up successfully.')
+    } catch (error) {
+      console.error('🔴 Error setting up WordPress configuration:', error)
+    }
+  }
+
+  /**
    * Downloads and installs a package from a specified source to the target directory.
    *
    * @param {string} packageSource - The source of the package, which can be a URL or a GitHub repository name.
@@ -155,7 +198,7 @@ class WordPressInstaller {
    * @throws {Error} If the package source is an invalid GitHub repository name.
    * @return {Promise<void>} A promise that resolves when the package is downloaded and installed.
    */
-  async downloadAndInstallPackage (packageSource, targetDirectory, packageName) {
+  async downloadPackage (packageSource, targetDirectory, packageName) {
     if (packageSource.startsWith('http://github.com') || packageSource.startsWith('https://github.com')) {
       return await this.execDownload(packageName.split('/').pop(), packageSource, targetDirectory)
     } else {
@@ -164,33 +207,18 @@ class WordPressInstaller {
   }
 
   /**
-   * Asynchronously installs a theme.
+   * Asynchronously installs a package (theme or plugin).
    *
-   * @param {string} themeName - The name of the theme to install.
-   * @param {string} themeVersion - The version of the theme to install (optional).
-   * @return {Promise<void>} A Promise that resolves when the theme is installed.
+   * @param {string} packageName - The name of the package to install.
+   * @param {string} packageVersion - The version of the package to install (optional).
+   * @param {string} packageType - The type of the package ('theme' or 'plugin').
+   * @return {Promise<void>} A Promise that resolves when the package is installed.
    */
-  async installTheme (themeName, themeVersion) {
-    const name = themeName
+  async installPackage (packageName, packageVersion, packageType) {
+    const packageUrl = getDownloadUrl(packageName, packageVersion, packageType)
+    const targetDirectory = packageType === 'theme' ? this.themeFolder : this.pluginsFolder
 
-    const themeUrl = getDownloadUrl(themeName, themeVersion, 'theme')
-
-    await this.downloadAndInstallPackage(themeUrl, this.themeFolder, name)
-  }
-
-  /**
-   * Installs a plugin.
-   *
-   * @param {string} pluginName - The name of the plugin to install.
-   * @param {string} pluginVersion - The version of the plugin to install.
-   * @return {Promise<void>} A Promise that resolves when the plugin is installed.
-   */
-  async installPlugin (pluginName, pluginVersion) {
-    const name = pluginName
-
-    const pluginUrl = getDownloadUrl(pluginName, pluginVersion, 'plugin')
-
-    await this.downloadAndInstallPackage(pluginUrl, this.pluginsFolder, name)
+    await this.downloadPackage(packageUrl, targetDirectory, packageName)
   }
 
   /**
@@ -202,13 +230,16 @@ class WordPressInstaller {
     const { wordpress, themes, plugins } = this.config
 
     if (wordpress) {
+      // download and install WordPress
       await this.installWordPress(wordpress.version, wordpress.language)
+      // setup WordPress
+      await this.setupWordPressConfig()
     }
 
     if (plugins) {
       await Promise.all(
         plugins.map(async (plugin) => {
-          await this.installPlugin(plugin.name, plugin.version)
+          await this.installPackage(plugin.name, plugin.version, 'plugin')
           console.log(`🆗 Plugin ${plugin.name} installed successfully.`)
         })
       )
@@ -217,7 +248,7 @@ class WordPressInstaller {
     if (themes) {
       await Promise.all(
         themes.map(async (theme) => {
-          await this.installTheme(theme.name, theme.version)
+          await this.installPackage(theme.name, theme.version, 'theme')
           console.log(`🆗 Theme ${theme.name} installed successfully.`)
         })
       )

@@ -32,7 +32,8 @@ function getDownloadUrl (packageName, packageVersion, type) {
 
 async function installNpmPackages (packageDirectory) {
   const packageJsonPath = path.join(packageDirectory, 'package.json')
-  const packageName = packageJsonPath.name
+  const packageData = JSON.parse(fs.readFileSync(packageJsonPath))
+  const packageName = packageData.name
 
   if (fs.existsSync(packageJsonPath)) {
     console.log(`🚀 Installing and building ${packageName} from local directory...`)
