@@ -38,6 +38,12 @@
     },
     {
       "name": "erikyo/OH-MY-SVG"
+    },
+    {
+      "name": "wp-super-cache"
+    },
+    {
+      "name": "woocommerce"
     }
   ]
 }

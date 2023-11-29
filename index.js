@@ -20,8 +20,6 @@ class WordPressInstaller {
 
   /**
    * Create a temporary directory if it does not already exist.
-   *
-   * @param {string} tempDir - The path to the temporary directory.
    */
   makeTempDir () {
     if (!fs.existsSync(this.tempDir)) {
@@ -91,14 +89,14 @@ class WordPressInstaller {
    *
    * @param {string} zipFilePath - The path of the zip file to extract.
    * @param {string} targetDirectory - The directory to extract the zip file to.
-   * @return {boolean} Returns true if the extraction is successful, false otherwise.
+   * @return {Promise<void>} Returns true if the extraction is successful, false otherwise.
    */
   async extractZip (zipFilePath, targetDirectory) {
     try {
       return await extract(zipFilePath, { dir: targetDirectory })
     } catch (err) {
       console.log(`📛 Error extracting WordPress zip: ${err}`)
-      return false
+      return err
     }
   }
 
@@ -108,13 +106,14 @@ class WordPressInstaller {
    * @param {string} filename - The name of the file to be downloaded.
    * @param {string} downloadUrl - The URL of the file to be downloaded.
    * @param {string|null} destinationPath - The optional path where the downloaded file should be saved.
-   * @return {Promise<boolean>} - A promise that resolves with the path of the downloaded file.
+   * @return {Promise<void>} - A promise that resolves with the path of the downloaded file.
    */
   async execDownload (filename, downloadUrl, destinationPath = null) {
     const zipFilePath = path.join(this.tempDir, filename)
-    console.log('Downloading ' + downloadUrl)
-    await this.downloadFile(downloadUrl, zipFilePath)
-    return this.extractZip(zipFilePath, destinationPath ?? this.tempDir)
+    console.log('Downloading ' + downloadUrl + '.zip')
+    await this.downloadFile(downloadUrl + '.zip', zipFilePath)
+    await this.extractZip(zipFilePath, destinationPath ?? this.tempDir)
+    if (destinationPath) return installNpmPackages(path.join(destinationPath, filename))
   }
 
   /**
@@ -122,7 +121,7 @@ class WordPressInstaller {
    *
    * @param {string} version - The version of WordPress to install.
    * @param {string} language - The language of WordPress to install.
-   * @return {boolean} Returns `true` if WordPress was installed successfully, `false` if the WordPress folder already exists.
+   * @return {Promise<void>} Returns `true` if WordPress was installed successfully, `false` if the WordPress folder already exists.
    */
   async installWordPress (version, language) {
     const downloadUrl = getWordPressDownloadUrl(version, language)
@@ -131,19 +130,19 @@ class WordPressInstaller {
       const destinationPath = path.join(__dirname, this.config.name)
 
       if (fs.existsSync(destinationPath)) {
-        console.log('WordPress folder already exists')
+        console.log('WordPress folder already exists. Skipping download.')
         return false
       }
 
-      await this.execDownload(`wordpress-${version}.zip`, downloadUrl)
+      await this.execDownload(`wordpress-${version}`, downloadUrl)
 
       // Rename the extracted folder from 'wordpress' to the name that matches the site name
       const wordpressFolder = path.join(this.tempDir, 'wordpress')
       fs.renameSync(wordpressFolder, destinationPath)
 
-      console.log(`WordPress installed successfully in ${destinationPath}`)
+      console.log(`🆗 WordPress installed successfully in ${destinationPath}`)
     } catch (error) {
-      console.error('Error downloading or installing WordPress:', error)
+      console.error('🔴 Error downloading or installing WordPress:', error)
     }
   }
 
@@ -154,13 +153,13 @@ class WordPressInstaller {
    * @param {string} targetDirectory - The directory where the package will be installed.
    * @param {string} packageName - The name of the package.
    * @throws {Error} If the package source is an invalid GitHub repository name.
-   * @return {Promise<boolean>} A promise that resolves when the package is downloaded and installed.
+   * @return {Promise<void>} A promise that resolves when the package is downloaded and installed.
    */
   async downloadAndInstallPackage (packageSource, targetDirectory, packageName) {
     if (packageSource.startsWith('http://github.com') || packageSource.startsWith('https://github.com')) {
-      return await this.execDownload(packageName.split('/').pop() + '.zip', packageSource, targetDirectory)
+      return await this.execDownload(packageName.split('/').pop(), packageSource, targetDirectory)
     } else {
-      return await this.execDownload(packageName + '.zip', packageSource, targetDirectory)
+      return await this.execDownload(packageName, packageSource, targetDirectory)
     }
   }
 
@@ -176,7 +175,7 @@ class WordPressInstaller {
 
     const themeUrl = getDownloadUrl(themeName, themeVersion, 'theme')
 
-    await this.downloadAndInstallPackage(themeUrl + '.zip', this.themeFolder, name)
+    await this.downloadAndInstallPackage(themeUrl, this.themeFolder, name)
   }
 
   /**
@@ -191,7 +190,7 @@ class WordPressInstaller {
 
     const pluginUrl = getDownloadUrl(pluginName, pluginVersion, 'plugin')
 
-    await this.downloadAndInstallPackage(pluginUrl + '.zip', this.pluginsFolder, name)
+    await this.downloadAndInstallPackage(pluginUrl, this.pluginsFolder, name)
   }
 
   /**
@@ -206,20 +205,20 @@ class WordPressInstaller {
       await this.installWordPress(wordpress.version, wordpress.language)
     }
 
-    if (themes) {
-      await Promise.all(
-        themes.map(async (theme) => {
-          await this.installTheme(theme.name, theme.version)
-          console.log(`Theme ${theme.name} installed successfully.`)
-        })
-      )
-    }
-
     if (plugins) {
       await Promise.all(
         plugins.map(async (plugin) => {
           await this.installPlugin(plugin.name, plugin.version)
-          console.log(`Plugin ${plugin.name} installed successfully.`)
+          console.log(`🆗 Plugin ${plugin.name} installed successfully.`)
+        })
+      )
+    }
+
+    if (themes) {
+      await Promise.all(
+        themes.map(async (theme) => {
+          await this.installTheme(theme.name, theme.version)
+          console.log(`🆗 Theme ${theme.name} installed successfully.`)
         })
       )
     }
@@ -235,11 +234,12 @@ class WordPressInstaller {
     await this.installPackages()
 
     await this.cleanup(this.tempDir)
-
-    process.exit(0)
   }
 }
 
 const config = JSON.parse(fs.readFileSync('wp-package.json', 'utf8'))
 const installer = new WordPressInstaller(config)
-installer.run()
+installer.run().then(() => {
+  console.log('🚀 WordPress installed successfully.')
+  process.exit(0)
+})
