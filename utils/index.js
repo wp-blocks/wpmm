@@ -29,10 +29,23 @@ async function cleanup (dir) {
   }
 }
 
+/**
+ * Renames a folder from the old path to the new path.
+ *
+ * @param {string} oldPath - The path of the folder to be renamed.
+ * @param {string} newPath - The new path of the folder.
+ */
 function renameFolder (oldPath, newPath) {
   fs.renameSync(oldPath, newPath)
 }
 
+/**
+ * Generates the download URL for a specific version of WordPress.
+ *
+ * @param {string} version - The version of WordPress.
+ * @param {string} language - The language for the WordPress download. Defaults to 'en'.
+ * @return {string} The download URL for the specified version of WordPress.
+ */
 function getWordPressDownloadUrl (version, language) {
   if (language && !language.startsWith('en')) {
     return `https://${language}.wordpress.org/wordpress-${version}-${language}`
@@ -41,6 +54,14 @@ function getWordPressDownloadUrl (version, language) {
   }
 }
 
+/**
+ * Generates a download URL for a given package.
+ *
+ * @param {string} packageName - The name of the package.
+ * @param {string} packageVersion - The version of the package (optional).
+ * @param {string} type - The type of the package (e.g., 'plugins', 'themes').
+ * @return {string} The download URL for the package.
+ */
 function getDownloadUrl (packageName, packageVersion, type) {
   if (packageVersion) {
     packageName = `${packageName}.${packageVersion}`
@@ -139,6 +160,12 @@ async function extractZip (zipFilePath, targetDirectory) {
   }
 }
 
+/**
+ * Installs npm packages in the specified package directory.
+ *
+ * @param {string} packageDirectory - The directory path where the package is located.
+ * @return {Promise<void>} - A promise that resolves when the packages are installed and built.
+ */
 async function installNpmPackages (packageDirectory) {
   const packageJsonPath = path.join(packageDirectory, 'package.json')
   if (!fs.existsSync(packageJsonPath)) {
@@ -167,7 +194,13 @@ async function installNpmPackages (packageDirectory) {
   })
 }
 
-// Define a function to find the value of a specific option
+/**
+ * Define a function to find the value of a specific option in an array of arguments
+ *
+ * @param args An array of arguments
+ * @param optionName The name of the option to search for
+ * @return {*|null} The value of the option if found, null otherwise
+ */
 function getOptionValue (args, optionName) {
   const optionIndex = args.indexOf(optionName)
   return optionIndex !== -1 && optionIndex + 1 < args.length ? args[optionIndex + 1] : null

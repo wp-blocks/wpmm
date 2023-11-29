@@ -4,6 +4,9 @@ const fs = require('fs')
 const path = require('path')
 const { getOptionValue, makeDir, downloadFile, cleanup, renameFolder, extractZip, getWordPressDownloadUrl, getDownloadUrl, installNpmPackages } = require('./utils/index.js')
 
+/**
+ * The wpwm class represents the WordPress installer and provides methods for installing WordPress and its dependencies.
+ */
 class WordPressInstaller {
   /**
    * Constructor function that initializes the config, tempDir, baseFolder, pluginsFolder, and themeFolder properties.
