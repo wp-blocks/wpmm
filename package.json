@@ -8,13 +8,21 @@
     "url": "https://github.com/erikyo/wpmm.git"
   },
   "bin": {
-    "wpmm": "index.js"
+    "wpmm": "lib/index.js"
   },
-  "main": "index.js",
-  "keywords": ["wordpress", "manager", "package", "wp", "themes", "plugins" ],
+  "main": "lib/index.js",
+  "keywords": [
+    "wordpress",
+    "manager",
+    "package",
+    "wp",
+    "themes",
+    "plugins"
+  ],
   "license": "ISC",
   "dependencies": {
-    "extract-zip": "^2.0.1"
+    "extract-zip": "^2.0.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "eslint": "^8.54.0",
