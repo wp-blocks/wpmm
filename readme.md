@@ -50,6 +50,10 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
       "name": "cf7-antispam"
     },
     {
+      "name": "cf7-smtp",
+      "source": "https://github.com/erikyo/cf7-smtp.git"
+    },
+    {
       "name": "wordpress-seo"
     },
     {
