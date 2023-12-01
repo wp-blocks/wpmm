@@ -1,0 +1,20 @@
+name: JSDoc Action
+
+on:
+  release:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build
+      uses: andstor/jsdoc-action@v1
+      with:
+        source_dir: ./lib
+        recurse: true
+        output_dir: ./docs
+        config_file: jsdoc.json
+        front_page: readme.md
+
