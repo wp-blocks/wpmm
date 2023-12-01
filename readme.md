@@ -16,9 +16,9 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
 
 ```json
 {
-  "name": "modul-r-blog",
+  "name": "my-blog",
   "wordpress": {
-    "version": "5.8.1",
+    "version": "6.4.1",
     "language": "en_US",
     "config": {
       "DB_NAME": "your_database_name",
