@@ -11,5 +11,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
+    semi: ['error', 'always'],
+    'max-len': ['error', { code: 200 }]
   }
-}
+};

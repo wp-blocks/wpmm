@@ -1,13 +1,13 @@
 {
-  "name": "modul-r-blog",
+  "name": "wordpress",
   "wordpress": {
     "version": "6.4.1",
     "language": "en_US",
     "config": {
-      "DB_NAME": "your_database_name",
-      "DB_USER": "your_database_user",
-      "DB_PASSWORD": "your_database_password",
-      "DB_HOST": "localhost",
+      "DB_NAME": "my_db_name",
+      "DB_USER": "my_username",
+      "DB_PASSWORD": "my_password",
+      "DB_HOST": "127.0.0.1",
       "DB_CHARSET": "utf8",
       "DB_COLLATE": "",
       "table_prefix": "wp_",
