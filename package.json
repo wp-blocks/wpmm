@@ -7,11 +7,12 @@
     "type": "git",
     "url": "https://github.com/erikyo/wpmm.git"
   },
+  "scripts": {
+    "test": "jest",
+    "docs": "npx jsdoc lib/index.js -d docs -c jsdoc.json"
+  },
   "bin": {
     "wpmm": "lib/index.js"
-  },
-  "scripts": {
-    "test": "jest"
   },
   "main": "lib/index.js",
   "keywords": [
