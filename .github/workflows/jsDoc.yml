@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Build
       uses: andstor/jsdoc-action@v1
       with:
@@ -18,3 +22,8 @@ jobs:
         config_file: jsdoc.json
         front_page: readme.md
 
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./docs
