@@ -3,12 +3,8 @@
     "allowUnknownTags": true,
     "dictionaries": ["jsdoc","closure"]
   },
-  "typescript": {
-    "moduleRoot": "lib"
-  },
   "sourceType": "module",
   "source": {
-    "include": ["./lib", "package.json", "readme.md"],
     "includePattern": "\\.(jsx|js|ts|tsx)$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
@@ -25,4 +21,3 @@
     "showInheritedInNav": true
   }
 }
-
