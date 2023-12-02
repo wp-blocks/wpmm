@@ -1,19 +1,20 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": ["jsdoc"]
+    "dictionaries": ["jsdoc","closure"]
   },
   "typescript": {
     "moduleRoot": "lib"
   },
+  "sourceType": "module",
   "source": {
-    "include": ["lib", "package.json", "readme.md"],
+    "include": ["./lib", "package.json", "readme.md"],
     "includePattern": "\\.(jsx|js|ts|tsx)$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
     "encoding": "utf8",
-    "destination": "docs",
+    "destination": "./docs",
     "readme": "./readme.md",
     "recurse": true
   },
