@@ -1,4 +1,18 @@
 # WordPress Magic Manager 🪄
+<div>
+  <a href="https://www.npmjs.com/package/wpmm">
+    <img alt="version" src="https://img.shields.io/npm/v/wpmm.svg?label=npm%20version" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/blob/master/LICENSE">
+    <img alt="version" src="https://img.shields.io/npm/l/wpmm" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/actions">
+    <img alt="build" src="https://img.shields.io/github/actions/workflow/status/erikyo/wpmm/node.js.yml" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/actions">
+    <img alt="workflows" src="https://github.com/erikyo/wpmm/actions/workflows/node.js.yml/badge.svg" />
+  </a>
+</div>
 
 WordPress Installer is a Node.js script designed to streamline the installation process of WordPress, themes, and plugins. It simplifies the configuration through a wp-package.json file, allowing you to specify the WordPress version, language, themes, and plugins for installation.
 

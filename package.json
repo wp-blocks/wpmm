@@ -1,6 +1,6 @@
 {
   "name": "wpmm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Node.js script for easy installation of WordPress, themes, and plugins.",
   "author": "Erik Golinelli <https://github.com/erikyo>",
   "repository": {
