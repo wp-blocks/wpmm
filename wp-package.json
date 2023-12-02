@@ -20,5 +20,6 @@
     }
   },
   "themes": [],
-  "plugins": []
+  "plugins": [],
+  "postInstall": []
 }

@@ -3,10 +3,13 @@ const defaultConfig = 'wp-package.json';
 
 describe('getConfig', () => {
   it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', () => {
+    const argv = {};
     // Call the function
-    const config = getConfig();
+    const config = getConfig(argv);
     // Assert the result
     expect(config).toBeInstanceOf(Object);
+    expect(config.name).toBe('wordpress');
+    expect(config.plugins).toHaveLength(0);
   });
 });
 
