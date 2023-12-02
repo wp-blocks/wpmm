@@ -18,8 +18,21 @@ WordPress Installer is a Node.js script designed to streamline the installation 
 
 ## Usage
 
-1. Create a `wp-package.json` file with your desired configuration.
+1. Create a `wp-package.json` file with your desired configuration. You can use the command `npx wpmm --init` to create an empty configuration file or `npx wpmm --dump` in the root directory of a wordpress website in order to get the configuration of that website.
 2. Run the script using `npx wpmm`.
+
+## Commands and Options
+### `npx wpmm`
+Installs the WordPress version, themes, and plugins defined in wp-package.json
+Whenever the configuration file is not found, the command will install the last WordPress version.
+
+
+### `npx wpmm --init`
+Initialize the project and create a sample wp-package.json file.
+
+
+### `npx wpmm --dump`
+Scan and extract version information from PHP files within themes and plugins.
 
 ## Configuration
 
@@ -52,7 +65,8 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
   "themes": [
     {
       "name": "modul-r",
-      "version": "1.4.4"
+      "version": "1.4.4",
+      "source": "https://github.com/wp-blocks/modul-r.git"
     }
   ],
   "plugins": [
@@ -61,32 +75,24 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
       "version": "5.8.3"
     },
     {
-      "name": "cf7-antispam"
-    },
-    {
-      "name": "cf7-smtp",
-      "source": "https://github.com/erikyo/cf7-smtp.git"
-    },
-    {
-      "name": "wordpress-seo"
-    },
-    {
-      "name": "erikyo/OH-MY-SVG"
-    },
-    {
-      "name": "wp-super-cache"
-    },
-    {
-      "name": "woocommerce"
+      "name": "cf7-antispam",
+      "version": "0.4.5",
+      "source": "https://github.com/wp-blocks/cf7-antispam/archive/refs/heads/main.zip"
     }
+  ],
+  "postInstall": [
+    "wp cache flush",
+    "wp plugin install $(wp plugin list --field=name) --force"
   ]
 }
 
 ```
+
 ## Features
 - WordPress Installation: Easily install a specific version of WordPress with configurable settings.
 - Theme Installation: Specify themes and their versions to be installed.
 - Plugin Installation: Install plugins directly from GitHub or other sources.
+- Version Detection: Automatically extract version information from PHP files within themes and plugins.
 
 ## Contributions
 Feel free to contribute by opening issues, suggesting features, or submitting pull requests. Your feedback is valuable!
