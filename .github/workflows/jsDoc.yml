@@ -8,25 +8,19 @@ on:
     types: [ closed ]
     branches:
       - master
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
   # Single deploy job since we're just deploying
   deploy:
-    name: Deploy
-    needs: build
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+    name: Deploy Documentation
 
     # Deploy to the github-pages environment
     environment:
@@ -37,24 +31,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Build
+      - name: Build Docs
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./lib
           recurse: true
-          output_dir: ./out
+          output_dir: ./
           config_file: jsdoc.json
           front_page: readme.md
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           # Upload entire repository
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
