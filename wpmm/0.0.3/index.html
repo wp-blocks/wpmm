@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3>wpmm 0.0.3</h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>WordPress Magic Manager 🪄</h1>
+<div>
+  <a href="https://www.npmjs.com/package/wpmm">
+    <img alt="version" src="https://img.shields.io/npm/v/wpmm.svg?label=npm%20version" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/blob/master/LICENSE">
+    <img alt="version" src="https://img.shields.io/npm/l/wpmm" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/actions">
+    <img alt="build" src="https://img.shields.io/github/actions/workflow/status/erikyo/wpmm/node.js.yml" />
+  </a>
+  <a href="https://github.com/erikyo/wpmm/actions">
+    <img alt="workflows" src="https://github.com/erikyo/wpmm/actions/workflows/node.js.yml/badge.svg" />
+  </a>
+</div>
+<p>WordPress Installer is a Node.js script designed to streamline the installation process of WordPress, themes, and plugins. It simplifies the configuration through a wp-package.json file, allowing you to specify the WordPress version, language, themes, and plugins for installation.</p>
+<h2>Usage</h2>
+<ol>
+<li>Create a <code>wp-package.json</code> file with your desired configuration. You can use the command <code>npx wpmm --init</code> to create an empty configuration file or <code>npx wpmm --dump</code> in the root directory of a wordpress website in order to get the configuration of that website.</li>
+<li>Run the script using <code>npx wpmm</code>.</li>
+</ol>
+<h2>Commands and Options</h2>
+<h3><code>npx wpmm</code></h3>
+<p>Installs the WordPress version, themes, and plugins defined in wp-package.json
+Whenever the configuration file is not found, the command will install the last WordPress version.</p>
+<h3><code>npx wpmm --init</code></h3>
+<p>Initialize the project and create a sample wp-package.json file.</p>
+<h3><code>npx wpmm --dump</code></h3>
+<p>Scan and extract version information from PHP files within themes and plugins.</p>
+<h2>Configuration</h2>
+<p>Edit the <code>wp-package.json</code> file to define the WordPress version, language, themes, and plugins to be installed.</p>
+<h3>Example Configuration</h3>
+<pre class="prettyprint source lang-json"><code>{
+  &quot;name&quot;: &quot;my-blog&quot;,
+  &quot;wordpress&quot;: {
+    &quot;version&quot;: &quot;6.4.1&quot;,
+    &quot;language&quot;: &quot;en_US&quot;,
+    &quot;config&quot;: {
+      &quot;DB_NAME&quot;: &quot;your_database_name&quot;,
+      &quot;DB_USER&quot;: &quot;your_database_user&quot;,
+      &quot;DB_PASSWORD&quot;: &quot;your_database_password&quot;,
+      &quot;DB_HOST&quot;: &quot;localhost&quot;,
+      &quot;DB_CHARSET&quot;: &quot;utf8&quot;,
+      &quot;DB_COLLATE&quot;: &quot;&quot;,
+      &quot;table_prefix&quot;: &quot;wp_&quot;,
+      &quot;WP_DEBUG&quot;: true,
+      &quot;WP_SITEURL&quot;: &quot;http://example.com&quot;,
+      &quot;WP_HOME&quot;: &quot;http://example.com&quot;,
+      &quot;WP_CONTENT_DIR&quot;: &quot;/path/to/custom/content&quot;,
+      &quot;WP_CONTENT_URL&quot;: &quot;http://example.com/custom/content&quot;,
+      &quot;DISALLOW_FILE_EDIT&quot;: true
+    }
+  },
+  &quot;themes&quot;: [
+    {
+      &quot;name&quot;: &quot;modul-r&quot;,
+      &quot;version&quot;: &quot;1.4.4&quot;,
+      &quot;source&quot;: &quot;https://github.com/wp-blocks/modul-r.git&quot;
+    }
+  ],
+  &quot;plugins&quot;: [
+    {
+      &quot;name&quot;: &quot;contact-form-7&quot;,
+      &quot;version&quot;: &quot;5.8.3&quot;
+    },
+    {
+      &quot;name&quot;: &quot;cf7-antispam&quot;,
+      &quot;version&quot;: &quot;0.4.5&quot;,
+      &quot;source&quot;: &quot;https://github.com/wp-blocks/cf7-antispam/archive/refs/heads/main.zip&quot;
+    }
+  ],
+  &quot;postInstall&quot;: [
+    &quot;wp cache flush&quot;,
+    &quot;wp plugin install $(wp plugin list --field=name) --force&quot;
+  ]
+}
+
+</code></pre>
+<h2>Features</h2>
+<ul>
+<li>WordPress Installation: Easily install a specific version of WordPress with configurable settings.</li>
+<li>Theme Installation: Specify themes and their versions to be installed.</li>
+<li>Plugin Installation: Install plugins directly from GitHub or other sources.</li>
+<li>Version Detection: Automatically extract version information from PHP files within themes and plugins.</li>
+</ul>
+<h2>Contributions</h2>
+<p>Feel free to contribute by opening issues, suggesting features, or submitting pull requests. Your feedback is valuable!</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Package.html">Package</a></li><li><a href="WordPressInstaller.html">WordPressInstaller</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cleanup">cleanup</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#extractZip">extractZip</a></li><li><a href="global.html#generateSalt">generateSalt</a></li><li><a href="global.html#getConfig">getConfig</a></li><li><a href="global.html#getDownloadUrl">getDownloadUrl</a></li><li><a href="global.html#getWordPressDownloadUrl">getWordPressDownloadUrl</a></li><li><a href="global.html#geVarFromPHPFile">geVarFromPHPFile</a></li><li><a href="global.html#installNpmPackages">installNpmPackages</a></li><li><a href="global.html#isWPCLIAvailable">isWPCLIAvailable</a></li><li><a href="global.html#makeDir">makeDir</a></li><li><a href="global.html#renameFolder">renameFolder</a></li><li><a href="global.html#replaceDbConstant">replaceDbConstant</a></li><li><a href="global.html#replaceEmptySalts">replaceEmptySalts</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Dec 02 2023 19:42:37 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

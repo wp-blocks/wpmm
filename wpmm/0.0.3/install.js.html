@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: install.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: install.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const path = require('path');
+const { isWPCLIAvailable } = require('./utils');
+const { cleanup, makeDir } = require('./fs');
+const { WordPressPackage, PluginPackage, ThemePackage } = require('./package');
+
+/**
+ * The wpmm class represents the WordPress installer and provides methods for installing WordPress and its dependencies.
+ */
+class WordPressInstaller {
+  /**
+   * Initializes a new instance of the constructor.
+   *
+   * @param {Object} config - The configuration object for the constructor.
+   */
+  constructor (config) {
+    this.config = config;
+    this.rootFolder = process.cwd();
+    this.tempDir = path.join(this.rootFolder, 'temp');
+    this.baseFolder = path.join(this.rootFolder, config.name ?? 'wordpress');
+    this.pluginsFolder = path.join(this.baseFolder, 'wp-content', 'plugins');
+    this.themeFolder = path.join(this.baseFolder, 'wp-content', 'themes');
+  }
+
+  /**
+   * Installs packages based on the configuration provided.
+   *
+   * @return {Promise} A promise that resolves when all the packages are installed.
+   */
+  async installPackages () {
+    const { wordpress, plugins, themes, postInstall } = this.config;
+
+    // Create temp folder
+    makeDir(this.tempDir);
+
+    const promises = [];
+
+    // the default paths for the packages
+    const defaultPaths = {
+      rootFolder: this.rootFolder,
+      tempDir: this.tempDir,
+      baseFolder: this.baseFolder,
+      destFolder: this.baseFolder
+    };
+
+    if (wordpress) {
+      const wpPackage = new WordPressPackage(this.config, defaultPaths);
+      await wpPackage.install();
+    }
+
+    if (plugins) {
+      const pluginPackages = plugins.map((plugin) => new PluginPackage(plugin, { ...defaultPaths, destFolder: this.pluginsFolder }));
+      promises.push(...pluginPackages.map((pluginPackage) => pluginPackage.install()));
+    }
+
+    if (themes) {
+      const themePackages = themes.map((theme) => new ThemePackage(theme, { ...defaultPaths, destFolder: this.themeFolder }));
+      promises.push(...themePackages.map((themePackage) => themePackage.install()));
+    }
+
+    // Install plugins and themes concurrently
+    await Promise.all(promises);
+
+    // Run post-install commands
+    if (isWPCLIAvailable() &amp;&amp; postInstall &amp;&amp; postInstall.length > 0) {
+      console.log('🤖 Executing post-install commands...');
+      await this.runPostInstallCommands(postInstall);
+    }
+  }
+
+  /**
+   * Runs post-install commands asynchronously.
+   *
+   * @param {Array} commands - An array of WP-CLI commands to execute.
+   * @return {Promise&lt;void>} - A promise that resolves when the post-install commands complete.
+   */
+  async runPostInstallCommands (commands) {
+    // Execute each post-install command
+    for (const command of commands) {
+      try {
+        console.log(`Executing: ${command}`);
+        const { stdout, stderr } = await exec(command);
+        if (stdout) {
+          console.log(`Command output:\n${stdout}`);
+        }
+        if (stderr) {
+          console.error(`Command error:\n${stderr}`);
+        }
+      } catch (error) {
+        console.error(`Error executing command: ${command}`, error);
+      }
+    }
+  }
+
+  /**
+   * Runs the function asynchronously.
+   *
+   * @return {Promise&lt;void>} - A promise that resolves when the function completes.
+   */
+  async run () {
+    await this.installPackages();
+    cleanup(this.tempDir);
+  }
+}
+
+module.exports = WordPressInstaller;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Package.html">Package</a></li><li><a href="WordPressInstaller.html">WordPressInstaller</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cleanup">cleanup</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#extractZip">extractZip</a></li><li><a href="global.html#generateSalt">generateSalt</a></li><li><a href="global.html#getConfig">getConfig</a></li><li><a href="global.html#getDownloadUrl">getDownloadUrl</a></li><li><a href="global.html#getWordPressDownloadUrl">getWordPressDownloadUrl</a></li><li><a href="global.html#geVarFromPHPFile">geVarFromPHPFile</a></li><li><a href="global.html#installNpmPackages">installNpmPackages</a></li><li><a href="global.html#isWPCLIAvailable">isWPCLIAvailable</a></li><li><a href="global.html#makeDir">makeDir</a></li><li><a href="global.html#renameFolder">renameFolder</a></li><li><a href="global.html#replaceDbConstant">replaceDbConstant</a></li><li><a href="global.html#replaceEmptySalts">replaceEmptySalts</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Dec 02 2023 19:42:37 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

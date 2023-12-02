@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: fs.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: fs.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require('fs');
+const https = require('node:https');
+const extract = require('extract-zip');
+
+/**
+ * Create a temporary directory if it does not already exist.
+ */
+function makeDir (dirpath) {
+  if (!fs.existsSync(dirpath)) {
+    fs.mkdirSync(dirpath, { recursive: true });
+  }
+}
+
+/**
+ * Asynchronously cleans up a temporary directory.
+ *
+ * @param {string} dir - The path to the temporary directory.
+ * @return {void} A promise that resolves when the cleanup is complete.
+ */
+async function cleanup (dir) {
+  try {
+    fs.rmSync(dir, { recursive: true });
+    console.log(`🧹 ${dir} removed successfully.`);
+  } catch (err) {
+    // File deletion failed
+    console.error(err.message);
+  }
+}
+
+/**
+ * Renames a folder from the old path to the new path.
+ *
+ * @param {string} oldPath - The path of the folder to be renamed.
+ * @param {string} newPath - The new path of the folder.
+ */
+function renameFolder (oldPath, newPath) {
+  fs.renameSync(oldPath, newPath);
+}
+
+/**
+ * Downloads a file from the specified URL and saves it to the target file.
+ *
+ * @param {string} url - The URL of the file to download.
+ * @param {string} targetFile - The file path where the downloaded file will be saved.
+ * @return {Promise&lt;void>} A promise that resolves when the file is successfully downloaded and saved, or rejects with an error if there was an issue.
+ */
+async function downloadFile (url, targetFile) {
+  if (fs.existsSync(targetFile)) {
+    console.log(`ℹ️ ${targetFile} already exists. Skipping download.`);
+    return;
+  }
+  try {
+    return await new Promise((resolve, reject) => {
+      https.get(
+        url,
+        { headers: { 'User-Agent': 'nodejs' } },
+        async (response) => {
+          const code = response.statusCode ?? 0;
+
+          if (code >= 400) {
+            return reject(new Error(response.statusMessage));
+          }
+
+          if (code > 300 &amp;&amp; code &lt; 400 &amp;&amp; !!response.headers.location) {
+            return resolve(await downloadFile(response.headers.location, targetFile));
+          }
+
+          const fileWriter = fs.createWriteStream(targetFile).on('finish', () => {
+            resolve({});
+          });
+
+          response.pipe(fileWriter);
+        }).on('error', (error) => {
+        reject(error);
+      });
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+/**
+ * Extracts a zip file to a target directory.
+ *
+ * @param {string} zipFilePath - The path of the zip file to extract.
+ * @param {string} targetDirectory - The directory to extract the zip file to.
+ * @return {Promise&lt;string>} Returns true if the extraction is successful, false otherwise.
+ */
+async function extractZip (zipFilePath, targetDirectory) {
+  let commonRootPath; // Variable to store the common root path
+
+  try {
+    await extract(zipFilePath, {
+      dir: targetDirectory,
+      onEntry: (entry) => {
+        const entryPathParts = entry.fileName.split('/');
+
+        if (!commonRootPath) {
+          // Initialize the common root path with the first entry
+          commonRootPath = entryPathParts[0];
+        } else {
+          // Update the common root path based on the current entry
+          for (let i = 0; i &lt; entryPathParts.length; i++) {
+            if (commonRootPath.split('/')[i] !== entryPathParts[i]) {
+              commonRootPath = commonRootPath.split('/').slice(0, i).join('/');
+              break;
+            }
+          }
+        }
+      }
+    });
+
+    // Return the root folder name
+    console.log(`📂 Extracted to ${commonRootPath}`);
+    return commonRootPath;
+  } catch (err) {
+    console.error(`📛 Error extracting ${zipFilePath} zip: ${err}`);
+    return err;
+  }
+}
+
+module.exports = {
+  makeDir,
+  cleanup,
+  renameFolder,
+  downloadFile,
+  extractZip
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Package.html">Package</a></li><li><a href="WordPressInstaller.html">WordPressInstaller</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cleanup">cleanup</a></li><li><a href="global.html#downloadFile">downloadFile</a></li><li><a href="global.html#extractZip">extractZip</a></li><li><a href="global.html#generateSalt">generateSalt</a></li><li><a href="global.html#getConfig">getConfig</a></li><li><a href="global.html#getDownloadUrl">getDownloadUrl</a></li><li><a href="global.html#getWordPressDownloadUrl">getWordPressDownloadUrl</a></li><li><a href="global.html#geVarFromPHPFile">geVarFromPHPFile</a></li><li><a href="global.html#installNpmPackages">installNpmPackages</a></li><li><a href="global.html#isWPCLIAvailable">isWPCLIAvailable</a></li><li><a href="global.html#makeDir">makeDir</a></li><li><a href="global.html#renameFolder">renameFolder</a></li><li><a href="global.html#replaceDbConstant">replaceDbConstant</a></li><li><a href="global.html#replaceEmptySalts">replaceEmptySalts</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Dec 02 2023 19:42:37 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
