@@ -22,7 +22,7 @@ jobs:
       with:
         source_dir: ./lib
         recurse: true
-        output_dir: ./docs
+        output_dir: ./out
         config_file: jsdoc.json
         front_page: readme.md
 
@@ -30,4 +30,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        publish_dir: ./out
