@@ -26,10 +26,21 @@ WordPress Installer is a Node.js script designed to streamline the installation 
 Installs the WordPress version, themes, and plugins defined in wp-package.json
 Whenever the configuration file is not found, the command will install the last WordPress version.
 
+### `npx wpmm --version`
+### `npx wpmm --v`
+output the current wpmm version
+
+### `npx wpmm --info`
+Returns the information for the Wordpress installation in the current folder
 
 ### `npx wpmm --init`
 Initialize the project and create a sample wp-package.json file.
 
+### `npx wpmm --upload-database database/my.sql`
+Upload a database named my.sql into the wordpress database
+
+### `npx wpmm --dump-database`
+Download the current wp database and save it into /backups/${databasename}.sql.gz
 
 ### `npx wpmm --dump`
 Scan and extract version information from PHP files within themes and plugins.

@@ -8,8 +8,8 @@
     "url": "https://github.com/erikyo/wpmm.git"
   },
   "scripts": {
-    "test": "jest",
-    "docs": "npx jsdoc lib/index.js -d docs -c jsdoc.json"
+    "lint": "eslint ./lib ./test",
+    "test": "jest"
   },
   "bin": {
     "wpmm": "lib/index.js"
