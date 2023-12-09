@@ -1,4 +1,5 @@
-const { getConfig, getWordPressDownloadUrl, generateSalt, replaceDbConstant, replaceDbConstantBool, getDownloadUrl } = require('../lib/utils/index.js');
+const { getConfig, getWordPressDownloadUrl, getDownloadUrl } = require('../lib/utils/index.js');
+const {generateSalt, replaceDbConstant, replaceDbConstantBool} = require("../lib/utils/wpConfig");
 
 describe('getConfig', () => {
   it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', () => {
