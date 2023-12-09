@@ -1,24 +1,20 @@
 {
   "name": "wordpress",
   "wordpress": {
-    "version": "6.4.1",
-    "language": "en_US",
+    "version": null,
+    "language": null,
     "config": {
       "DB_NAME": "my_db_name",
-      "DB_USER": "my_username",
-      "DB_PASSWORD": "my_password",
-      "DB_HOST": "127.0.0.1",
+      "DB_USER": "my_db_username",
+      "DB_PASSWORD": "my_db_password",
+      "DB_HOST": "localhost",
       "DB_CHARSET": "utf8",
       "DB_COLLATE": "",
       "table_prefix": "wp_",
-      "WP_DEBUG": true,
-      "WP_SITEURL": "http://example.com",
-      "WP_HOME": "http://example.com",
-      "WP_CONTENT_DIR": "/path/to/custom/content",
-      "WP_CONTENT_URL": "http://example.com/custom/content",
-      "DISALLOW_FILE_EDIT": true
+      "WP_DEBUG": true
     }
   },
+  "database": {},
   "themes": [],
   "plugins": [],
   "postInstall": []
