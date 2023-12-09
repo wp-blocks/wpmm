@@ -73,6 +73,11 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
       "DISALLOW_FILE_EDIT": true
     }
   },
+  "database": {
+    "type": "mysql",
+    "filename": "databases/database.sql",
+    "backup-folder": "backups"
+  },
   "themes": [
     {
       "name": "modul-r",
@@ -83,7 +88,7 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
   "plugins": [
     {
       "name": "contact-form-7",
-      "version": "5.8.3"
+      "version": "5.8.4"
     },
     {
       "name": "cf7-antispam",
