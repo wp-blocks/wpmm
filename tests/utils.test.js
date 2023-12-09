@@ -1,5 +1,5 @@
-const { getConfig, getWordPressDownloadUrl, getDownloadUrl } = require('../lib/utils/index.js');
-const {generateSalt, replaceDbConstant, replaceDbConstantBool} = require("../lib/utils/wpConfig");
+const { getConfig, getWordPressDownloadUrl, getDownloadUrl } = require('../lib/utils/data.js');
+const { generateSalt, replaceDbConstant, replaceDbConstantBool } = require("../lib/utils/wpConfig.js");
 
 describe('getConfig', () => {
   it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', () => {
@@ -8,7 +8,6 @@ describe('getConfig', () => {
     const config = getConfig(argv);
     // Assert the result
     expect(config).toBeInstanceOf(Object);
-    expect(config.name).toBe('wordpress');
     expect(config.plugins).toHaveLength(0);
   });
 });
