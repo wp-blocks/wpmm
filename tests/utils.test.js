@@ -1,5 +1,7 @@
 const { getConfig, getWordPressDownloadUrl, getDownloadUrl } = require('../lib/utils/data.js');
 const { generateSalt, replaceDbConstant, replaceDbConstantBool } = require("../lib/utils/wordpress.js");
+const {getDataFromFile} = require("../lib/utils/wordpress");
+
 
 describe('getConfig', () => {
   it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', () => {
@@ -8,6 +10,7 @@ describe('getConfig', () => {
     const config = getConfig(argv);
     // Assert the result
     expect(config).toBeInstanceOf(Object);
+    //expect(config.name).toBe('wordpress');
     expect(config.plugins).toHaveLength(0);
   });
 });
@@ -82,5 +85,27 @@ describe('getDownloadUrl', () => {
   test('should return url for different package names', () => {
     expect(getDownloadUrl('test1', '1.0', 'plugins')).toEqual('https://downloads.wordpress.org/plugins/test1.1.0.zip');
     expect(getDownloadUrl('test2', '2.0', 'plugins')).toEqual('https://downloads.wordpress.org/plugins/test2.2.0.zip');
+  });
+});
+
+describe('getDataFromFile', () => {
+  it('returns the correct version from the PHP file', () => {
+
+    // Mock file content
+    const fileContent = `$wp_version = "5.8.1";\n$wp_local_package = "en_US";`;
+
+    // Call your function
+    const version = getDataFromFile(fileContent, 'wp_version');
+
+    // Check that the function returns the correct output
+    expect(version).toBe("5.8.1");
+  });
+
+  it('returns null when the version is not found in the PHP file', () => {
+    const fileContent = `$something_else = "5.8.1";`;
+
+    const version = getDataFromFile(fileContent, 'wp_version');
+
+    expect(version).toBe(null);
   });
 });
