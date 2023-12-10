@@ -4,14 +4,15 @@ const {getDataFromFile} = require("../lib/utils/wordpress");
 
 
 describe('getConfig', () => {
-  it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', () => {
-    const argv = {};
+  it('should read wp-package.json from the root folder and return the default configuration if the file does not exist', async () => {
+    const argv = undefined;
     // Call the function
-    const config = getConfig(argv);
+    const config = await getConfig(argv);
     // Assert the result
     expect(config).toBeInstanceOf(Object);
-    //expect(config.name).toBe('wordpress');
-    expect(config.plugins).toHaveLength(0);
+    expect(config.name).toBe('wordpress');
+    expect(config.wordpress).toMatchObject({"config": {}});
+    expect(config.plugins).not.toBeFalsy();
   });
 });
 
