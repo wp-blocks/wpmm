@@ -16,8 +16,7 @@
   },
   "database": {
     "type": "mysql",
-    "filename": "databases/database.sql",
-    "backup-folder": "backups"
+    "filename": "databases/database.sql"
   },
   "themes": [
     {

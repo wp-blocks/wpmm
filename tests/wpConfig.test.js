@@ -2,13 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const {parseWpConfig} = require("../lib/utils/wordpress");
 
-jest.mock("fs");
-jest.mock("path");
 
+describe('parseWpConfig with real file', () => {
 
-describe("parseWpConfig tests", () => {
+  it('should parse wp-config.php file content and return constants and variables', () => {
 
-  test("if wp-config.php valid, should return object containing extracted constants and variables", () => {
     const mockWpConfigContent = `
     define( 'DB_NAME', 'nome_del_database_qui' );
     $table_prefix = 'wp_';
@@ -18,16 +16,24 @@ describe("parseWpConfig tests", () => {
     // $ignore = 'a';
     `;
 
-    path.join.mockReturnValue('./assets/wp-config.php');
-    fs.readFileSync.mockImplementation(() => mockWpConfigContent);
-
-    const result = parseWpConfig("dummy-path");
-
-    console.log(result);
+    const result = parseWpConfig(mockWpConfigContent);
 
     expect(result).toEqual({
       constants: { "DB_NAME": "nome_del_database_qui" },
       variables: { "table_prefix": "wp_", "table_prefix2": "wp2_" }
     });
+  });
+
+  it('should parse wp-config.php file content and return constants and variables', () => {
+    const filePath = path.join( __dirname,'fixtures', 'wp-config.php');
+
+    // Read the actual file content
+    const wpConfigContent = fs.readFileSync(filePath, 'utf8');
+
+    const result = parseWpConfig(wpConfigContent);
+
+    // Ensure the result is as expected based on the actual file content
+    expect(result).toBeTruthy();
+    expect(result).toMatchObject({ constants: {}, variables: {table_prefix: "wp_"} });
   });
 });
