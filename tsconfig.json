@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "strict": true,
+    "pretty": false,
+    "allowJs": true,
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "rootDir": "lib",
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": [
+    "./lib/**/*"
+  ]
+}

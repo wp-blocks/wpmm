@@ -36,10 +36,13 @@ Returns the information for the Wordpress installation in the current folder
 ### `npx wpmm --init`
 Initialize the project and create a sample wp-package.json file.
 
-### `npx wpmm --upload-database database/my.sql`
+### `npx wpmm --template https://gist.githubusercontent.com/erikyo/795746c96f422168121e47c2a876fb31/raw/1ec18a8bc10b6f80221b69944d9dad19c25613c1/wp-package.json`
+Initialize the project using a template wp-package.json file.
+
+### `npx wpmm --upload-db database/my.sql`
 Upload a database named my.sql into the wordpress database
 
-### `npx wpmm --dump-database`
+### `npx wpmm --dump-db`
 Download the current wp database and save it into /backups/${databasename}.sql.gz
 
 ### `npx wpmm --dump`
