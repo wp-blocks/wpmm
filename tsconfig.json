@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2015",
+    "target": "es5",
     "moduleResolution": "node",
     "strict": true,
-    "pretty": false,
     "allowJs": true,
     "checkJs": true,
     "resolveJsonModule": true,
