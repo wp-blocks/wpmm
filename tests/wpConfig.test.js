@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const {parseWpConfig} = require("../lib/utils/wordpress");
+const {parseWpConfig} = require("../lib/utils/parsers.js");
 
 
 describe('parseWpConfig with real file', () => {
