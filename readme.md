@@ -26,10 +26,24 @@ WordPress Installer is a Node.js script designed to streamline the installation 
 Installs the WordPress version, themes, and plugins defined in wp-package.json
 Whenever the configuration file is not found, the command will install the last WordPress version.
 
+### `npx wpmm --version`
+### `npx wpmm --v`
+output the current wpmm version
+
+### `npx wpmm --info`
+Returns the information for the Wordpress installation in the current folder
 
 ### `npx wpmm --init`
 Initialize the project and create a sample wp-package.json file.
 
+### `npx wpmm --template https://gist.githubusercontent.com/erikyo/795746c96f422168121e47c2a876fb31/raw/1ec18a8bc10b6f80221b69944d9dad19c25613c1/wp-package.json`
+Initialize the project using a template wp-package.json file.
+
+### `npx wpmm --upload-db database/my.sql`
+Upload a database named my.sql into the wordpress database
+
+### `npx wpmm --dump-db`
+Download the current wp database and save it into /backups/${databasename}.sql.gz
 
 ### `npx wpmm --dump`
 Scan and extract version information from PHP files within themes and plugins.
@@ -62,6 +76,11 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
       "DISALLOW_FILE_EDIT": true
     }
   },
+  "database": {
+    "type": "mysql",
+    "filename": "databases/database.sql",
+    "backup-folder": "backups"
+  },
   "themes": [
     {
       "name": "modul-r",
@@ -72,7 +91,7 @@ Edit the `wp-package.json` file to define the WordPress version, language, theme
   "plugins": [
     {
       "name": "contact-form-7",
-      "version": "5.8.3"
+      "version": "5.8.4"
     },
     {
       "name": "cf7-antispam",
