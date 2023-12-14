@@ -8,7 +8,10 @@
     "url": "https://github.com/erikyo/wpmm.git"
   },
   "scripts": {
-    "lint": "eslint ./lib ./tests --fix",
+    "build": "tsc --build",
+    "watch": "tsc --watch",
+    "clean": "tsc --build --clean",
+    "lint": "eslint ./src ./tests --fix",
     "test": "jest",
     "prepare": "husky install",
     "locatesting": "npx . --info --template https://gist.githubusercontent.com/erikyo/795746c96f422168121e47c2a876fb31/raw/1ec18a8bc10b6f80221b69944d9dad19c25613c1/wp-package.json"
@@ -16,7 +19,6 @@
   "bin": {
     "wpmm": "lib/index.js"
   },
-  "main": "lib/index.js",
   "keywords": [
     "wordpress",
     "manager",
@@ -35,24 +37,30 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/axios": "^0.14.0",
     "@types/inquirer": "^8.2.10",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
     "@types/yargs": "^17.0.32",
-    "eslint": "^8.54.0",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-n": "^16.3.1",
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
+    "lint-staged": "^15.2.0",
     "prettier": "npm:wp-prettier@^3.0.3",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
   },
-  "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 4,
-    "semi": false,
-    "singleQuote": true
+  "lint-staged": {
+    "src/**/*.{ts}": [
+      "eslint --fix",
+      "prettier --write",
+      "tsc --build"
+    ]
   }
 }
