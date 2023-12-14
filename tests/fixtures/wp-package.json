@@ -1,4 +1,5 @@
 {
+  "$schema": "https://gist.githubusercontent.com/erikyo/7bcebc6d6e540eef3d1d92e37c0f9020/raw/77cfb0a932465c351f24a5a89c3641b0a8a08876/wpmm-schema.json",
   "wordpress": {
     "name": "wordpress",
     "version": "6.4.2",

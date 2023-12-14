@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "wordpress": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "WP_config": {
+          "type": "object",
+          "properties": {
+            "DB_NAME": {
+              "type": "string"
+            },
+            "DB_USER": {
+              "type": "string"
+            },
+            "DB_PASSWORD": {
+              "type": "string"
+            },
+            "DB_HOST": {
+              "type": "string"
+            },
+            "DB_CHARSET": {
+              "type": "string"
+            },
+            "DB_COLLATE": {
+              "type": "string"
+            },
+            "table_prefix": {
+              "type": "string"
+            },
+            "WP_DEBUG": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "DB_NAME",
+            "DB_USER",
+            "DB_PASSWORD",
+            "DB_HOST",
+            "DB_CHARSET",
+            "table_prefix",
+            "WP_DEBUG"
+          ]
+        }
+      },
+      "required": ["name", "version", "language", "WP_config"]
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "filename"]
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "version"]
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "version"]
+      }
+    },
+    "postInstall": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["wordpress", "database", "themes", "plugins", "postInstall"]
+}
