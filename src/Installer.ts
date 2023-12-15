@@ -1,6 +1,6 @@
 import { cleanup, makeDir } from './utils/fs'
-import Package from './Package'
-import WpPackage from './WpPackage'
+import { Package } from './Package'
+import { WpPackage } from './WpPackage'
 import { isWPCLIAvailable, runPostInstallCommands } from './utils/commands'
 import { WPMMconfig, WPMMpaths } from './types'
 
@@ -9,7 +9,7 @@ import { WPMMconfig, WPMMpaths } from './types'
  *
  * @class Installer
  */
-export default class Installer {
+export class Installer {
     /** The configuration object. */
     protected config: WPMMconfig
 
