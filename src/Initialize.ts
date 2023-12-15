@@ -15,7 +15,7 @@ import { getWpVersionCheck } from './utils/axios'
  *
  * @class Initialize
  */
-export default class Initialize {
+export class Initialize {
     /** The path to the WordPress folder. */
     private wpFolder: string
 

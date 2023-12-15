@@ -10,7 +10,7 @@ import type { WPMMconfig } from './types'
  *
  * @class Database
  */
-export default class Database {
+export class Database {
     /** The configuration object. */
     protected config: WPMMconfig
 

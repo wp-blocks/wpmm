@@ -2,7 +2,7 @@ import inquirer from 'inquirer'
 import path from 'path'
 import { DefaultWpInstallFolder, PkgFileName } from '../constants'
 import { getWordPressPaths } from './wordpress'
-import Dump from '../Dump'
+import { Dump } from '../Dump'
 import { WPMMconfig } from '../types'
 
 /**

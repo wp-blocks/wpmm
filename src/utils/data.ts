@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import Initialize from '../Initialize'
+import { Initialize } from '../Initialize'
 import { getTemplate } from './axios'
 import { isWordpressFolder } from './wordpress'
 import { DefaultWpInstallFolder, PkgFileName } from '../constants'

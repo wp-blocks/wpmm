@@ -1,9 +1,9 @@
 import { getInfo } from './utils/data'
-import Initialize from './Initialize'
-import Installer from './Installer'
-import Updater from './Updater'
-import Dump from './Dump'
-import Database from './Database'
+import { Initialize } from './Initialize'
+import { Installer } from './Installer'
+import { Updater } from './Updater'
+import { Dump } from './Dump'
+import { Database } from './Database'
 import { WPMMconfig, WPMMpaths } from './types'
 import { isValidUpdateOptions } from './utils/parsers'
 import yargs from 'yargs'
@@ -17,7 +17,7 @@ import yargs from 'yargs'
  *
  * @return {Object} The actions object.
  */
-export default function actions({
+export function actions({
     config,
     paths,
 }: {
