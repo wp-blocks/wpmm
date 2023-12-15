@@ -6,7 +6,7 @@ import { UpdateObject, WPMMconfig } from './types'
  *
  * @class Updater
  */
-export default class Updater {
+export class Updater {
     /** THe configuration object. */
     config: WPMMconfig
 

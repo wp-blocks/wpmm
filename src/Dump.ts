@@ -13,7 +13,7 @@ import type {
  *
  * @category Model
  */
-export default class Dump {
+export class Dump {
     /** The base folder of the WordPress installation. */
     protected baseFolder: string
 

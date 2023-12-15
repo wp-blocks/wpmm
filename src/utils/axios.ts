@@ -39,7 +39,7 @@ const reqOptions = {
     },
 }
 
-const axiosFetch = {
+export const axiosFetch = {
     get: <T>(url: string) => axios.get<T>(url, reqOptions).then(responseBody),
     post: <T>(url: string, body: object) =>
         axios.post<T>(url, body, reqOptions).then(responseBody),
@@ -60,5 +60,3 @@ export const getTemplate = (url: string): Promise<{ data: WPapiTemplateResponse 
  */
 export const getWpVersionCheck = (): Promise<WPapiCoreVersionResponse> =>
     axiosFetch.get<WPapiCoreVersionResponse>('https://api.wordpress.org/core/version-check/1.7/')
-
-export default axiosFetch

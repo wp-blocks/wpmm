@@ -12,7 +12,7 @@ import { WPMMconfigPkg, WPMMpaths } from './types'
  * @class Package
  * @template Package
  */
-export default class Package {
+export class Package {
     /** the package info */
     public pkgInfo: WPMMconfigPkg
 

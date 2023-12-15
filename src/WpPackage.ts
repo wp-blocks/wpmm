@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { renameFolder } from './utils/fs'
-import Package from './Package'
+import { Package } from './Package'
 import {
     replaceDbConstant,
     replaceDbConstantBool,
@@ -16,7 +16,7 @@ import type { WordpressPkg, WPMMpaths } from './types'
  * @class WpPackage
  * @extends Package<WpPackage> pkgConfig - the configuration object
  */
-export default class WpPackage extends Package {
+export class WpPackage extends Package {
     public pkgInfo: WordpressPkg
     /**
      * Constructs a new instance of the class.

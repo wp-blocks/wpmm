@@ -3,7 +3,7 @@ import { getConfig, printTimePassed } from './utils/data'
 import { hideBin } from 'yargs/helpers'
 import { getWordPressPaths } from './utils/wordpress'
 import yargs, { Argv } from 'yargs'
-import actions from './actions'
+import { actions } from './actions'
 import { WPMMconfig, WPMMpaths } from './types'
 
 /** @var {number} startTime - the time at which the script started. */
@@ -17,7 +17,7 @@ const argv: Argv<object> = yargs(hideBin(process.argv))
  * Get the configuration and invoke the actions based on the provided arguments.
  * @param argv - The command line arguments.
  */
-export default getConfig(argv)
+getConfig(argv)
     .then(
         /** @param {WPMMconfig} config - The configuration object for the script. */
         (config: WPMMconfig) => {
