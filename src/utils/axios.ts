@@ -1,6 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { WPapiCoreVersionResponse, WPapiTemplateResponse } from '../types'
 
+/**
+ * The Axios interceptor.
+ *
+ *  @see https://github.com/axios/axios?tab=readme-ov-file#interceptors
+ */
 axios.interceptors.response.use(
     (res) => res,
     (error: AxiosError) => {
@@ -26,8 +31,17 @@ axios.interceptors.response.use(
     }
 );
 
+/**
+ * Extracts the response data from an Axios response object.
+ *
+ * @param response - The Axios response object.
+ * @return The response data.
+ */
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
+/**
+ * The Axios request options.
+ */
 const reqOptions = {
     headers: {
         'User-Agent':
@@ -39,8 +53,26 @@ const reqOptions = {
     },
 }
 
-export const axiosFetch = {
+/**
+ * Fetches data from the provided URL using Axios.
+ *
+ * @param url - The URL to fetch data from.
+ */
+const axiosFetch = {
+    /**
+     * A function that performs an HTTP GET request using Axios.
+     *
+     * @param {string} url - The URL to send the GET request to.
+     * @return A promise that resolves to the response data.
+     */
     get: <T>(url: string) => axios.get<T>(url, reqOptions).then(responseBody),
+    /**
+     * Sends a POST request to the specified URL with the provided body.
+     *
+     * @param {string} url - The URL to send the request to.
+     * @param {object} body - The body of the request.
+     * @return A promise that resolves to the response data.
+     */
     post: <T>(url: string, body: object) =>
         axios.post<T>(url, body, reqOptions).then(responseBody),
 };
@@ -60,3 +92,4 @@ export const getTemplate = (url: string): Promise<{ data: WPapiTemplateResponse 
  */
 export const getWpVersionCheck = (): Promise<WPapiCoreVersionResponse> =>
     axiosFetch.get<WPapiCoreVersionResponse>('https://api.wordpress.org/core/version-check/1.7/')
+
