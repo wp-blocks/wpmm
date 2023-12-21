@@ -1,8 +1,10 @@
 import inquirer from 'inquirer'
+import { select } from '@inquirer/prompts';
 import path from 'path'
 import { DefaultWpInstallFolder, PkgFileName } from '../constants'
 import { getWordPressPaths } from './wordpress'
 import { Dump } from '../Dump'
+import { getKeyValue } from 'isotolanguage'
 import { WPMMconfig } from '../types'
 
 /**
@@ -24,33 +26,37 @@ export async function askForConfiguration(): Promise<{
             {
                 type: 'confirm',
                 name: 'newInstallation',
-                message:
-                    '❓ Do you want to create a new WordPress installation?',
+                message: 'Do you want to create a new WordPress installation?',
                 default: true,
-            },
-            {
-                type: 'input',
-                name: 'name',
-                message: 'Enter the name of your website:',
-                default:
-                    process.cwd().split('/').pop() || DefaultWpInstallFolder,
-                when: (answers) => answers.newInstallation, // This question will be asked only if 'newInstallation' is true
-            },
-            {
-                type: 'input',
-                name: 'version',
-                message: 'Enter the WordPress version:',
-                default: 'Latest',
-                when: (answers) => answers.newInstallation,
-            },
-            {
-                type: 'input',
-                name: 'language',
-                message: 'Enter the language for your WordPress site:',
-                default: 'English',
-                when: (answers) => answers.newInstallation,
-            },
-        ])
+            }
+        ]).then(async ( answers ) => {
+            if (answers.newInstallation) {
+                const name = await inquirer.prompt([{
+                        type: 'input',
+                        name: 'name',
+                        message: 'Enter the name of your website:',
+                        default: path.basename(process.cwd()) || DefaultWpInstallFolder// This question will be asked only if 'newInstallation' is true
+                    }
+                ])
+                const version = await inquirer.prompt([{
+                        type: 'input',
+                        name: 'version',
+                        message: 'Enter the WordPress version:',
+                        default: 'Latest'
+                    }
+                ])
+                const language = await select({
+                    message: 'Select a language',
+                    choices: getKeyValue('locale','language-name'),
+                })
+                return { ...name, ...version, ...answers, language }
+            } else {
+                console.error(
+                    `⚠️ The template file ${PkgFileName} does not exist in the current folder. Please provide a template file using the --template option.`
+                )
+                process.exit(1)
+            }
+        })
         .then(
             (answers: {
                 newInstallation: boolean

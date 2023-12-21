@@ -32,6 +32,9 @@
     "axios": "^1.6.2",
     "extract-zip": "^2.0.1",
     "inquirer": "^8.2.6",
+    "@inquirer/prompts": "^3.3.0",
+    "isotolanguage": "^1.0.0",
+    "locale-code": "^2.0.2",
     "mysql2": "^3.6.5",
     "mysqldump": "^3.2.0",
     "yargs": "^17.7.2"
