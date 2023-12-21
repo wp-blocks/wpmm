@@ -18,7 +18,7 @@ export const DefaultWpDatabaseType: string = 'mysql'
  *
  * @type {string} defaultWpInstallLanguage - The default language for the WordPress install
  */
-export const DefaultWpInstallLanguage: string = 'en_US'
+export const DefaultWpInstallLanguage: string = 'English'
 
 /**
  * The default configuration object

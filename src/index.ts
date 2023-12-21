@@ -31,6 +31,8 @@ getConfig(argv)
              */
             const launcher = actions({ config, paths })
 
+            // DEBUG console.log(argv)
+
             for (const key of Object.keys(argv)) {
                 // Skip the loop iteration when the key is '_' or '$0'
                 if (key === '_' || key === '$0') continue
@@ -39,7 +41,7 @@ getConfig(argv)
             }
         }
     )
-    .catch((/** @type {Error} */ err) => console.error(err))
+    .catch((err: Error) => console.error(err))
     .finally(() => {
         /**
          * That's it 🎉! We're done! let's print how long it took to run the script and exit with a success code.

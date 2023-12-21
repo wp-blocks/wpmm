@@ -64,6 +64,7 @@ export async function getConfig(args: yargs.Argv<object>): Promise<WPMMconfig> {
         console.log(
             `⚠️ Cannot find any Wordpress files in the current folder and the template file ${PkgFileName} is missing.`
         )
+
         // Ask the user if they want to create a new WordPress installation
         const { name, version, language } = await askForConfiguration()
 
