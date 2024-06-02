@@ -1,16 +1,16 @@
-import fs from 'fs'
-import path from 'path'
-import { Initialize } from '../Initialize'
-import { getTemplate } from './axios'
-import { isWordpressFolder } from './wordpress'
-import { DefaultWpInstallFolder, PkgFileName } from '../constants'
-import { askForConfiguration, askForDump } from './prompts'
-import { WPMMconfig, WPMMconfigWP } from '../types'
+import fs from "node:fs";
+import path from "node:path";
+import { Initialize } from "../Initialize.js";
+import { DefaultWpInstallFolder, PkgFileName } from "../constants.js";
+import type { WPMMconfig, WPMMconfigWP } from "../types.js";
+import { getTemplate } from "./axios.js";
+import { askForConfiguration, askForDump } from "./prompts.js";
+import { isWordpressFolder } from "./wordpress.js";
 
+import type { Argv } from "yargs";
 // read the version number from the package.json file
-import { name, version } from '../../package.json'
-import yargs from 'yargs'
-import { templateGuard } from './parsers'
+import { name, version } from "../../package.json";
+import { templateGuard } from "./parsers.js";
 
 /**
  * Initializes the configuration for the given base folder.
@@ -20,28 +20,28 @@ import { templateGuard } from './parsers'
  * @returns {Promise<WPMMconfig>} - The initialized configuration object.
  */
 export async function initConfig(
-    baseFolder: string,
-    options: { version?: string; language?: string }
+	baseFolder: string,
+	options: { version?: string; language?: string },
 ): Promise<WPMMconfig> {
-    // check if the output path exists
-    const init = new Initialize(baseFolder)
+	// check if the output path exists
+	const init = new Initialize(baseFolder);
 
-    // generate the default config
-    /**
-     * the default config
-     * @type {WPMMconfig} config
-     */
-    const config: WPMMconfig = await init.generateConfig(options)
+	// generate the default config
+	/**
+	 * the default config
+	 * @type {WPMMconfig} config
+	 */
+	const config: WPMMconfig = await init.generateConfig(options);
 
-    // create the 'wordpress' folder if it does not exist
-    if (!fs.existsSync(baseFolder)) {
-        fs.mkdirSync(baseFolder)
-    }
+	// create the 'wordpress' folder if it does not exist
+	if (!fs.existsSync(baseFolder)) {
+		fs.mkdirSync(baseFolder);
+	}
 
-    // write the default config to the template file
-    init.writeConfig(config)
+	// write the default config to the template file
+	init.writeConfig(config);
 
-    return config
+	return config;
 }
 
 /**
@@ -51,72 +51,68 @@ export async function initConfig(
  * @param args - The path to the template file.
  * @return {Promise<WPMMconfig>} The configuration object.
  */
-export async function getConfig(args: yargs.Argv<object>): Promise<WPMMconfig> {
-    /**
-     * The default config from the root plugin folder. This is used if no template is provided
-     *
-     * @type {WPMMconfig} config - The configuration object
-     */
-    let config: WPMMconfig
+export async function getConfig(args: Argv<object>): Promise<WPMMconfig> {
+	/**
+	 * The default config from the root plugin folder. This is used if no template is provided
+	 *
+	 * @type {WPMMconfig} config - The configuration object
+	 */
+	let config: WPMMconfig;
 
-    // Check if the script is running from the WordPress folder
-    if (!isWordpressFolder(process.cwd())) {
-        console.log(
-            `⚠️ Cannot find any Wordpress files in the current folder and the template file ${PkgFileName} is missing.`
-        )
+	// Check if the script is running from the WordPress folder
+	if (!isWordpressFolder(process.cwd())) {
+		console.log(
+			`! Cannot find any Wordpress files in the current folder and the template file ${PkgFileName} is missing.`,
+		);
 
-        // Ask the user if they want to create a new WordPress installation
-        const { name, version, language } = await askForConfiguration()
+		// Ask the user if they want to create a new WordPress installation
+		const { name, version, language } = await askForConfiguration();
 
-        // If the template file does not exist, create it with the default config in the 'wordpress' folder
-        const baseFolder = path.join(
-            process.cwd(),
-            name ?? DefaultWpInstallFolder
-        )
+		// If the template file does not exist, create it with the default config in the 'wordpress' folder
+		const baseFolder = path.join(process.cwd(), name ?? DefaultWpInstallFolder);
 
-        // Initialize the configuration
-        return await initConfig(baseFolder, {
-            version,
-            language,
-        })
-    } else {
-        if (fs.existsSync(PkgFileName)) {
-            // If the template file exists, read it as JSON
-            config = JSON.parse(fs.readFileSync(PkgFileName, 'utf8'))
-            console.log(
-                `ℹ️ The template file ${PkgFileName} exists in the root folder. Using it.`
-            )
-        } else {
-            console.error(
-                `⚠️ The template file ${PkgFileName} does not exist in the current folder.`
-            )
-            const newConfig = await askForDump()
-            // the new config was dumped from the current WordPress installation
-            if (newConfig) {
-                config = newConfig
-            } else {
-                console.log(
-                    `🔴 Script terminated. Cannot find any Wordpress information in the current folder and the template file ${PkgFileName} is missing.`
-                )
-                process.exit(1)
-            }
-        }
-    }
+		// Initialize the configuration
+		return await initConfig(baseFolder, {
+			version,
+			language,
+		});
+	}
+	if (fs.existsSync(PkgFileName)) {
+		// If the template file exists, read it as JSON
+		config = JSON.parse(fs.readFileSync(PkgFileName, "utf8"));
+		console.log(
+			`i The template file ${PkgFileName} exists in the root folder. Using it.`,
+		);
+	} else {
+		console.error(
+			`! The template file ${PkgFileName} does not exist in the current folder.`,
+		);
+		const newConfig = await askForDump();
+		// the new config was dumped from the current WordPress installation
+		if (newConfig) {
+			config = newConfig;
+		} else {
+			console.log(
+				`🔴 Script terminated. Cannot find any Wordpress information in the current folder and the template file ${PkgFileName} is missing.`,
+			);
+			process.exit(1);
+		}
+	}
 
-    const template = templateGuard(args as { template?: unknown });
+	const template = templateGuard(args as { template?: unknown });
 
-    // Extract the value of the --template option or use the default
-    if (template) {
-        /**
-         * the user has provided a template file via the --template option. read the config from the remote source
-         */
-        const templateConfig = await getTemplate(template)
+	// Extract the value of the --template option or use the default
+	if (template) {
+		/**
+		 * the user has provided a template file via the --template option. read the config from the remote source
+		 */
+		const templateConfig = await getTemplate(template);
 
-        // merge the template config with the default config
-        config = { ...config, ...templateConfig }
-    }
+		// merge the template config with the default config
+		config = { ...config, ...templateConfig };
+	}
 
-    return config
+	return config;
 }
 
 /**
@@ -131,17 +127,17 @@ export async function getConfig(args: yargs.Argv<object>): Promise<WPMMconfig> {
  *   - database: The name of the database to connect to.
  */
 export function getConnectionSettings(config: WPMMconfigWP): {
-    host: string
-    user: string
-    password: string
-    database: string
+	host: string;
+	user: string;
+	password: string;
+	database: string;
 } {
-    return {
-        host: config.DB_HOST,
-        user: config.DB_USER,
-        password: config.DB_PASSWORD,
-        database: config.DB_NAME,
-    }
+	return {
+		host: config.DB_HOST,
+		user: config.DB_USER,
+		password: config.DB_PASSWORD,
+		database: config.DB_NAME,
+	};
 }
 
 /**
@@ -151,14 +147,16 @@ export function getConnectionSettings(config: WPMMconfigWP): {
  * @param {string} language - The language for the WordPress download. Defaults to 'en'.
  * @return {string} The download URL for the specified version of WordPress.
  */
-export function getWordPressDownloadUrl(version: string, language?: string): string {
-    if (language && !language.startsWith('en')) {
-        return `https://${language
-            .slice(0, 2)
-            .toLowerCase()}.wordpress.org/wordpress-${version}-${language}.zip`
-    } else {
-        return `https://wordpress.org/wordpress-${version}.zip`
-    }
+export function getWordPressDownloadUrl(
+	version: string,
+	language?: string,
+): string {
+	if (language && !language.startsWith("en")) {
+		return `https://${language
+			.slice(0, 2)
+			.toLowerCase()}.wordpress.org/wordpress-${version}-${language}.zip`;
+	}
+	return `https://wordpress.org/wordpress-${version}.zip`;
 }
 
 /**
@@ -170,24 +168,21 @@ export function getWordPressDownloadUrl(version: string, language?: string): str
  * @return {string} The download URL for the package.
  */
 export function getDownloadUrl(
-    packageName: string,
-    packageVersion: string | undefined = undefined,
-    type: string | undefined = 'plugins'
+	packageName: string,
+	packageVersion: string | undefined = undefined,
+	type: string | undefined = "plugins",
 ): string {
-    // Using the absolute uri of the package
-    if (
-        packageName.startsWith('http://') ||
-        packageName.startsWith('https://')
-    ) {
-        return packageName
-    }
+	// Using the absolute uri of the package
+	if (packageName.startsWith("http://") || packageName.startsWith("https://")) {
+		return packageName;
+	}
 
-    if (packageVersion) {
-        packageName = `${packageName}.${packageVersion}`
-    }
+	if (packageVersion) {
+		packageName = `${packageName}.${packageVersion}`;
+	}
 
-    // otherwise we assume it's a repo on WordPress.org
-    return `https://downloads.wordpress.org/${type}/${packageName}.zip`
+	// otherwise we assume it's a repo on WordPress.org
+	return `https://downloads.wordpress.org/${type}/${packageName}.zip`;
 }
 
 /**
@@ -197,34 +192,34 @@ export function getDownloadUrl(
  * @param {{}} actions
  */
 export function getInfo(
-    config: WPMMconfig,
-    actions: {
-        info?: () => void
-        init?: () => Promise<void>
-        install?: () => void
-        update?: ({ argv }: { argv?: yargs.Argv }) => void
-        dump?: () => void
-        'dump-db'?: () => Promise<void>
-        'dump-all'?: () => void
-        'upload-db'?: () => void
-    }
+	config: WPMMconfig,
+	actions: {
+		info?: () => void;
+		init?: () => Promise<void>;
+		install?: () => void;
+		update?: ({ argv }: { argv?: Argv }) => void;
+		dump?: () => void;
+		"dump-db"?: () => Promise<void>;
+		"dump-all"?: () => void;
+		"upload-db"?: () => void;
+	},
 ): void {
-    console.log(`📦 ${name.toUpperCase()} v${version.toString()}`)
-    console.log(`Node version: ${process.version}`)
-    console.log(`OS: ${process.platform} ${process.arch}`)
-    console.log(`Current working directory: ${process.cwd()}`)
-    console.log('------------------------------------------')
-    console.log(`🔧 Configuration: ${JSON.stringify(config, null, 2)}`)
-    console.log('*******************')
-    // get the keys of the actions object
-    const actionsKeys = Object.keys(actions)
-    console.log(
-        `🚀 Command line available actions: ${JSON.stringify(
-            actionsKeys,
-            null,
-            2
-        )}`
-    )
+	console.log(`📦 ${name.toUpperCase()} v${version.toString()}`);
+	console.log(`Node version: ${process.version}`);
+	console.log(`OS: ${process.platform} ${process.arch}`);
+	console.log(`Current working directory: ${process.cwd()}`);
+	console.log("------------------------------------------");
+	console.log(`🔧 Configuration: ${JSON.stringify(config, null, 2)}`);
+	console.log("*******************");
+	// get the keys of the actions object
+	const actionsKeys = Object.keys(actions);
+	console.log(
+		`🚀 Command line available actions: ${JSON.stringify(
+			actionsKeys,
+			null,
+			2,
+		)}`,
+	);
 }
 
 /**
@@ -234,10 +229,10 @@ export function getInfo(
  * @return {undefined}
  */
 export function printTimePassed(startTime: number): void {
-    // End the timer
-    const endTime = Date.now()
+	// End the timer
+	const endTime = Date.now();
 
-    // Calculate the time passed
-    const timePassed = (endTime - startTime) / 1000
-    console.log(`🕒 Time elapsed: ${timePassed} seconds`)
+	// Calculate the time passed
+	const timePassed = (endTime - startTime) / 1000;
+	console.log(`🕒 Time elapsed: ${timePassed} seconds`);
 }

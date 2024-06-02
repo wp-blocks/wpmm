@@ -1,44 +1,44 @@
 {
-  "$schema": "https://gist.githubusercontent.com/erikyo/7bcebc6d6e540eef3d1d92e37c0f9020/raw/77cfb0a932465c351f24a5a89c3641b0a8a08876/wpmm-schema.json",
-  "wordpress": {
-    "name": "wordpress",
-    "version": "6.4.2",
-    "language": "en_US",
-    "WP_config": {
-      "DB_NAME": "my_db_name",
-      "DB_USER": "my_db_username",
-      "DB_PASSWORD": "my_db_password",
-      "DB_HOST": "localhost",
-      "DB_CHARSET": "utf8",
-      "DB_COLLATE": "",
-      "table_prefix": "wp_",
-      "WP_DEBUG": true
-    }
-  },
-  "database": {
-    "type": "mysql",
-    "filename": "databases/database.sql"
-  },
-  "themes": [
-    {
-      "name": "modul-r",
-      "version": "1.4.4",
-      "source": "https://github.com/wp-blocks/modul-r.git"
-    }
-  ],
-  "plugins": [
-    {
-      "name": "contact-form-7",
-      "version": "5.8.4"
-    },
-    {
-      "name": "cf7-antispam",
-      "version": "0.4.5",
-      "source": "https://github.com/wp-blocks/cf7-antispam/archive/refs/heads/main.zip"
-    }
-  ],
-  "postInstall": [
-    "wp cache flush",
-    "wp plugin install $(wp plugin list --field=name) --force"
-  ]
+	"$schema": "https://gist.githubusercontent.com/erikyo/7bcebc6d6e540eef3d1d92e37c0f9020/raw/77cfb0a932465c351f24a5a89c3641b0a8a08876/wpmm-schema.json",
+	"wordpress": {
+		"name": "wordpress",
+		"version": "6.4.2",
+		"language": "en_US",
+		"WP_config": {
+			"DB_NAME": "my_db_name",
+			"DB_USER": "my_db_username",
+			"DB_PASSWORD": "my_db_password",
+			"DB_HOST": "localhost",
+			"DB_CHARSET": "utf8",
+			"DB_COLLATE": "",
+			"table_prefix": "wp_",
+			"WP_DEBUG": true
+		}
+	},
+	"database": {
+		"type": "mysql",
+		"filename": "databases/database.sql"
+	},
+	"themes": [
+		{
+			"name": "modul-r",
+			"version": "1.4.4",
+			"source": "https://github.com/wp-blocks/modul-r.git"
+		}
+	],
+	"plugins": [
+		{
+			"name": "contact-form-7",
+			"version": "5.8.4"
+		},
+		{
+			"name": "cf7-antispam",
+			"version": "0.4.5",
+			"source": "https://github.com/wp-blocks/cf7-antispam/archive/refs/heads/main.zip"
+		}
+	],
+	"postInstall": [
+		"wp cache flush",
+		"wp plugin install $(wp plugin list --field=name) --force"
+	]
 }

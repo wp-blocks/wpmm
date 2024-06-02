@@ -1,12 +1,12 @@
-import path from 'path'
-import fs from 'fs'
+import fs from "node:fs";
+import path from "node:path";
 import {
-    DefaultWpInstallFolder,
-    DefaultWpInstallLanguage,
-    PkgFileName,
-} from '../constants'
-import { getDataFromFile } from './parsers'
-import { WPMMpaths } from '../types'
+	DefaultWpInstallFolder,
+	DefaultWpInstallLanguage,
+	PkgFileName,
+} from "../constants.js";
+import type { WPMMpaths } from "../types.js";
+import { getDataFromFile } from "./parsers.js";
 
 /**
  * Determines if the provided folder is a WordPress folder.
@@ -15,11 +15,11 @@ import { WPMMpaths } from '../types'
  * @return {boolean} Returns true if the folder is not a WordPress folder, false otherwise.
  */
 export function isWordpressFolder(currentDirectory: string): boolean {
-    // if wp-config.php exists in the root folder or the wp-package.json file exists in the root folder
-    return (
-        fs.existsSync(path.join(currentDirectory, 'wp-config.php')) ||
-        fs.existsSync(path.join(currentDirectory, PkgFileName))
-    )
+	// if wp-config.php exists in the root folder or the wp-package.json file exists in the root folder
+	return (
+		fs.existsSync(path.join(currentDirectory, "wp-config.php")) ||
+		fs.existsSync(path.join(currentDirectory, PkgFileName))
+	);
 }
 
 /**
@@ -29,23 +29,20 @@ export function isWordpressFolder(currentDirectory: string): boolean {
  * @return {import("../constants").WPMMpaths} - An object containing the default paths for the WordPress installation.
  */
 export function getWordPressPaths(
-    websiteName: string,
-    baseFolder: string = process.cwd()
+	websiteName: string,
+	baseFolder: string = process.cwd(),
 ): WPMMpaths {
-    if (!isWordpressFolder(baseFolder)) {
-        baseFolder = path.join(
-            baseFolder,
-            websiteName ?? DefaultWpInstallFolder
-        )
-    }
+	if (!isWordpressFolder(baseFolder)) {
+		baseFolder = path.join(baseFolder, websiteName ?? DefaultWpInstallFolder);
+	}
 
-    return {
-        tempDir: path.join(baseFolder, 'temp'),
-        baseFolder,
-        destFolder: baseFolder,
-        pluginsFolder: path.join(baseFolder, 'wp-content', 'plugins'),
-        themeFolder: path.join(baseFolder, 'wp-content', 'themes'),
-    }
+	return {
+		tempDir: path.join(baseFolder, "temp"),
+		baseFolder,
+		destFolder: baseFolder,
+		pluginsFolder: path.join(baseFolder, "wp-content", "plugins"),
+		themeFolder: path.join(baseFolder, "wp-content", "themes"),
+	};
 }
 
 /**
@@ -54,10 +51,9 @@ export function getWordPressPaths(
  * @returns {string} The locale of the user.
  */
 export function getUserLocale(): string {
-    return (
-        Intl.DateTimeFormat().resolvedOptions().locale ||
-        DefaultWpInstallLanguage
-    )
+	return (
+		Intl.DateTimeFormat().resolvedOptions().locale || DefaultWpInstallLanguage
+	);
 }
 
 /**
@@ -67,21 +63,19 @@ export function getUserLocale(): string {
  * @returns {{version: string, locale: string}} - An object containing the version and locale information.
  */
 export function getCurrentWpInfo(wpFolder: string): {
-    version: string
-    locale: string
+	version: string;
+	locale: string;
 } {
-    // get the WordPress version and the locale from wp-includes/version.php
-    const versionFile = path.join(wpFolder, 'wp-includes', 'version.php')
-    const versionFileContent = fs.readFileSync(versionFile, 'utf8')
-    const version =
-        getDataFromFile(versionFileContent, 'wp_version') || 'latest'
-    const locale =
-        getDataFromFile(versionFileContent, 'wp_local_package') ||
-        getUserLocale()
-    return {
-        version,
-        locale,
-    }
+	// get the WordPress version and the locale from wp-includes/version.php
+	const versionFile = path.join(wpFolder, "wp-includes", "version.php");
+	const versionFileContent = fs.readFileSync(versionFile, "utf8");
+	const version = getDataFromFile(versionFileContent, "wp_version") || "latest";
+	const locale =
+		getDataFromFile(versionFileContent, "wp_local_package") || getUserLocale();
+	return {
+		version,
+		locale,
+	};
 }
 
 /**
@@ -91,19 +85,19 @@ export function getCurrentWpInfo(wpFolder: string): {
  * @return {string|null} The content of the wp-config.php file, or null if the file does not exist or is empty.
  */
 export function getWpConfigContent(wpFolder: string): string | null {
-    const filePath = path.join(wpFolder, 'wp-config.php')
+	const filePath = path.join(wpFolder, "wp-config.php");
 
-    if (!fs.existsSync(filePath)) {
-        console.log(`❗ wp-config.php not found in ${wpFolder}`)
-        return null
-    }
+	if (!fs.existsSync(filePath)) {
+		console.log(`❗ wp-config.php not found in ${wpFolder}`);
+		return null;
+	}
 
-    const wpConfigContent = fs.readFileSync(filePath, 'utf8')
+	const wpConfigContent = fs.readFileSync(filePath, "utf8");
 
-    if (!wpConfigContent) {
-        console.log(`❗ wp-config.php is empty in ${filePath}`)
-        return null
-    }
+	if (!wpConfigContent) {
+		console.log(`❗ wp-config.php is empty in ${filePath}`);
+		return null;
+	}
 
-    return wpConfigContent
+	return wpConfigContent;
 }

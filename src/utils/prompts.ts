@@ -1,11 +1,11 @@
-import inquirer from 'inquirer'
-import { select } from '@inquirer/prompts';
-import path from 'path'
-import { DefaultWpInstallFolder, PkgFileName } from '../constants'
-import { getWordPressPaths } from './wordpress'
-import { Dump } from '../Dump'
-import { getKeyValue } from 'isotolanguage'
-import { WPMMconfig } from '../types'
+import path from "node:path";
+import { select } from "@inquirer/prompts";
+import inquirer from "inquirer";
+import { getKeyValue } from "isotolanguage";
+import { Dump } from "../Dump.js";
+import { DefaultWpInstallFolder, PkgFileName } from "../constants.js";
+import type { WPMMconfig } from "../types.js";
+import { getWordPressPaths } from "./wordpress.js";
 
 /**
  * This function prompts the user for configuration details regarding a new WordPress installation.
@@ -17,68 +17,72 @@ import { WPMMconfig } from '../types'
  * @return Returns a promise that resolves with the result of the initialization of the configuration or ends the process if the template file does not exist.
  */
 export async function askForConfiguration(): Promise<{
-    name: string
-    version: string
-    language: string
+	name: string;
+	version: string;
+	language: string;
 }> {
-    return await inquirer
-        .prompt([
-            {
-                type: 'confirm',
-                name: 'newInstallation',
-                message: 'Do you want to create a new WordPress installation?',
-                default: true,
-            }
-        ]).then(async ( answers ) => {
-            if (answers.newInstallation) {
-                const name = await inquirer.prompt([{
-                        type: 'input',
-                        name: 'name',
-                        message: 'Enter the name of your website:',
-                        default: path.basename(process.cwd()) || DefaultWpInstallFolder// This question will be asked only if 'newInstallation' is true
-                    }
-                ])
-                const version = await inquirer.prompt([{
-                        type: 'input',
-                        name: 'version',
-                        message: 'Enter the WordPress version:',
-                        default: 'Latest'
-                    }
-                ])
-                const language = await select({
-                    message: 'Select a language',
-                    choices: getKeyValue('locale','language-name'),
-                })
-                return { ...name, ...version, ...answers, language }
-            } else {
-                console.error(
-                    `⚠️ The template file ${PkgFileName} does not exist in the current folder. Please provide a template file using the --template option.`
-                )
-                process.exit(1)
-            }
-        })
-        .then(
-            (answers: {
-                newInstallation: boolean
-                name: string
-                version: string
-                language: string
-            }) => {
-                if (answers.newInstallation) {
-                    /** @type {import("../constants").WordpressPkg} */
-                    return {
-                        name: answers?.name,
-                        version: answers?.version,
-                        language: answers?.language,
-                    }
-                } else {
-                    console.error(
-                        `⚠️ The template file ${PkgFileName} does not exist in the current folder. Please provide a template file using the --template option.`
-                    )
-                    process.exit(1)
-                }
-            }
-        )
+	return await inquirer
+		.prompt([
+			{
+				type: "confirm",
+				name: "newInstallation",
+				message: "Do you want to create a new WordPress installation?",
+				default: true,
+			},
+		])
+		.then(async (answers) => {
+			if (answers.newInstallation) {
+				const name = await inquirer.prompt([
+					{
+						type: "input",
+						name: "name",
+						message: "Enter the name of your website:",
+						default: path.basename(process.cwd()) || DefaultWpInstallFolder, // This question will be asked only if 'newInstallation' is true
+					},
+				]);
+				const version = await inquirer.prompt([
+					{
+						type: "input",
+						name: "version",
+						message: "Enter the WordPress version:",
+						default: "Latest",
+					},
+				]);
+				const language = await select({
+					message: "Select a language",
+					choices: getKeyValue("locale", "language-code") as {
+						name: string;
+						value: string;
+					}[],
+				});
+				return { ...name, ...version, ...answers, language };
+			}
+			console.error(
+				`! The template file ${PkgFileName} does not exist in the current folder. Please provide a template file using the --template option.`,
+			);
+			process.exit(1);
+		})
+		.then(
+			(answers: {
+				newInstallation: boolean;
+				name: string;
+				version: string;
+				language: string;
+			}) => {
+				if (answers.newInstallation) {
+					/** @type {import("../constants").WordpressPkg} */
+					return {
+						name: answers?.name,
+						version: answers?.version,
+						language: answers?.language,
+					};
+				}
+				console.error(
+					`! The template file ${PkgFileName} does not exist in the current folder. Please provide a template file using the --template option.`,
+				);
+				process.exit(1);
+			},
+		);
 }
 
 /**
@@ -91,29 +95,26 @@ export async function askForConfiguration(): Promise<{
  * @return The result of the dump initiation, if it is initiated.
  */
 export async function askForDump(): Promise<WPMMconfig | undefined> {
-    return await inquirer
-        .prompt([
-            {
-                type: 'confirm',
-                name: 'dump',
-                message: '❓ Do you want to Dump this WordPress installation?',
-                default: true,
-            },
-        ])
-        .then((answers) => {
-            if (answers.dump) {
-                const baseFolder = process.cwd()
-                const paths = getWordPressPaths(
-                    path.dirname(baseFolder),
-                    baseFolder
-                )
-                const dump = new Dump(paths)
-                return dump.init()
-            }
-        })
-        .then((result) => {
-            if (result?.wordpress.name) {
-                return result
-            }
-        })
+	return await inquirer
+		.prompt([
+			{
+				type: "confirm",
+				name: "dump",
+				message: "❓ Do you want to Dump this WordPress installation?",
+				default: true,
+			},
+		])
+		.then((answers) => {
+			if (answers.dump) {
+				const baseFolder = process.cwd();
+				const paths = getWordPressPaths(path.dirname(baseFolder), baseFolder);
+				const dump = new Dump(paths);
+				return dump.init();
+			}
+		})
+		.then((result) => {
+			if (result?.wordpress.name) {
+				return result;
+			}
+		});
 }
